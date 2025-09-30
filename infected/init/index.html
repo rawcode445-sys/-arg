@@ -1,7 +1,7 @@
 <!doctype html><html lang="fr"><head>
 <meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
 <title>RAW_VIRUS // INIT</title>
-<link rel="stylesheet" href="/assets/css/style.css">
+<link rel="stylesheet" href="../../assets/css/style.css">
 </head><body>
 <div class="wrapper">
   <div class="term">
@@ -12,12 +12,11 @@
       <div style="margin-top:12px"><button class="btn" type="submit">UNLOCK</button></div>
     </form>
     <p id="msg" class="blink" style="color:#f33;margin-top:10px;display:none">ACCESS DENIED</p>
-    <p style="opacity:.6;margin-top:8px">Tip: param URL d'urgence → <code>?k=rawvirus</code></p>
   </div>
 </div>
-<script src="/assets/js/guards.js"></script>
+<script src="../../assets/js/guards.js"></script>
 <script>
-const PLAYLIST_URL = "https://open.spotify.com/playlist/2nZnZQbDbaWwppCTeVYbn1?si=1c5a695525f24fa8";
+const PLAYLIST_URL = "https://open.spotify.com/playlist/37i9dQZF1DX3YSRoSdA634";
 document.getElementById('f').addEventListener('submit', async (e)=>{
   e.preventDefault();
   const ok = await checkGate(code.value, GATE1_HASH);
