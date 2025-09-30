@@ -1,29 +1,93 @@
 
 <!doctype html>
-<html lang="fr">
+<html lang="en">
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width,initial-scale=1">
   <title>ACCESS LEVEL 2 : 2nd_gate</title>
   <link rel="stylesheet" href="../../assets/css/style.css">
+  <style>
+    #teaser {
+      max-width:720px;
+      margin:12px 0;
+      filter: blur(25px) grayscale(100%);
+      transition: filter 800ms ease;
+      border:1px solid #222;
+      display:block;
+      width:100%;
+    }
+    #teaser.revealed { filter: none; }
+  </style>
 </head>
 <body>
   <div class="wrapper">
     <div class="term">
       <h2 class="glitch" data-text="FIREWALL//DISARMED">FIREWALL//DISARMED</h2>
-      <p>Zoom sur la pièce limitée ↓</p>
 
-      <div style="max-width:720px;margin:12px 0">
-        <img src="../../assets/img/teaser-fragment.jpg" alt="teaser" style="width:100%;display:block;filter:grayscale(30%) contrast(115%);border:1px solid #222">
+      <!-- Hidden teaser (your glitched photo) -->
+      <div><img id="teaser" src="../../assets/img/teaser-fragment.jpg" alt="teaser glitch"></div>
+
+      <p>To reveal the hidden fragment, solve this:</p>
+      <form id="revealForm" onsubmit="return false;">
+        <p>18-1-23 = ?</p>
+        <input id="revealAnswer" placeholder="Answer...">
+        <button class="btn">REVEAL</button>
+        <p id="revealMsg" style="color:#f33;display:none">Incorrect</p>
+      </form>
+
+      <!-- After reveal -->
+      <div id="afterReveal" style="display:none;margin-top:15px">
+        <p>SYSTEM UPDATE: Fragment decrypted. Proceed with validation.</p>
+
+        <form id="quiz" onsubmit="return false;">
+          <p>Q1: Complete the log → Propagation: XX-??-37</p>
+          <input id="q1" placeholder="Answer...">
+
+          <p>Q2: ROT13("EBJ//PBQR") = ?</p>
+          <input id="q2" placeholder="Answer...">
+
+          <button id="checkBtn" class="btn">VALIDATE</button>
+          <p id="msg" style="color:#f33;display:none">Incorrect answers</p>
+        </form>
+
+        <div id="eliteMsg" style="display:none;margin-top:15px;font-weight:bold;color:#0f0">
+          Well done agent, you are part of the elite // priority access granted.
+        </div>
+
+        <a id="accessBtn" class="btn" href="https://tally.so/r/REPLACE_TALLY_ID" target="_blank" rel="noopener" style="display:none;margin-top:15px">
+          REQUEST ACCESS
+        </a>
       </div>
-
-      <p style="margin-top:12px">Pré-inscription accès prioritaire au drop :</p>
-      <a class="btn" href="https://tally.so/r/w7GQ2L" target="_blank" rel="noopener">REQUEST ACCESS</a>
-
-      <p style="margin-top:14px;font-size:.85em;opacity:.8">
-        Les inscrits recevront un email avec accès prioritaire + le prochain indice (Gate 3).
-      </p>
     </div>
   </div>
+
+<script>
+// Reveal the image if the riddle is solved
+document.getElementById('revealForm').addEventListener('submit', ()=>{
+  const val = document.getElementById('revealAnswer').value.trim().toUpperCase();
+  if(val === "RAW"){
+    document.getElementById('teaser').classList.add('revealed');
+    document.getElementById('afterReveal').style.display = 'block';
+    document.getElementById('revealForm').style.display = 'none';
+  } else {
+    document.getElementById('revealMsg').style.display = 'block';
+  }
+});
+
+// Quiz for access
+document.getElementById('checkBtn').addEventListener('click', ()=>{
+  const r1 = document.getElementById('q1').value.trim();
+  const r2 = document.getElementById('q2').value.trim().toUpperCase();
+
+  if(r1 === "XX-45-37" && r2 === "RAW//CODE"){
+    document.getElementById('quiz').style.display = 'none';
+    document.getElementById('msg').style.display = 'none';
+    document.getElementById('eliteMsg').style.display = 'block';
+    document.getElementById('accessBtn').style.display = 'inline-block';
+  } else {
+    document.getElementById('msg').style.display = 'block';
+  }
+});
+</script>
 </body>
 </html>
