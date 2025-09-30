@@ -1,0 +1,20 @@
+:root { --bg:#000; --fg:#fff; --accent:#ff1a1a; --mono: "IBM Plex Mono", monospace; }
+*{box-sizing:border-box}
+html,body{margin:0;background:var(--bg);color:var(--fg);font-family:var(--mono);}
+.wrapper{min-height:100dvh;display:grid;place-items:center;padding:24px}
+.term{
+  max-width:780px;width:100%;border:1px solid #222;padding:24px;background:#050505;
+  box-shadow:0 0 40px #000 inset; position:relative; overflow:hidden;
+}
+h1,h2,pre,code{margin:0 0 12px}
+.btn{display:inline-block;padding:10px 16px;border:1px solid var(--accent);
+  text-decoration:none;color:var(--fg);letter-spacing:.08em}
+.btn:hover{background:#200}
+.glitch{position:relative;display:inline-block}
+.glitch:before,.glitch:after{
+  content:attr(data-text);position:absolute;left:0;top:0;clip-path:inset(0 0 0 0);
+}
+.glitch:before{transform:translateX(-2px);text-shadow:1px 0 var(--accent);mix-blend-mode:screen}
+.glitch:after{transform:translateX(2px);text-shadow:-1px 0 #0ff;mix-blend-mode:screen}
+.blink{animation:blink 1s steps(2,end) infinite}@keyframes blink{50%{opacity:.25}}
+footer{opacity:.6;margin-top:16px;font-size:.85em}
