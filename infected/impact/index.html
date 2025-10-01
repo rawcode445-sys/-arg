@@ -9,15 +9,19 @@
     .stage{max-width:780px;margin:10px auto;position:relative}
     #poster{width:100%;display:block;border:1px solid #222}
     .mask{
-      position:absolute;
-      filter: blur(14px) brightness(120%) contrast(110%);
-      transition: filter .35s ease, opacity .35s ease;
-      pointer-events:none;
-      background-image:url('../../assets/img/poster-final.jpg?v=1');
-      background-repeat:no-repeat;
-      border-radius:2px;
-    }
-    .mask.revealed{opacity:0; filter:blur(0)}
+  position:absolute;
+  z-index:2;
+  filter: blur(18px) brightness(120%) contrast(110%);
+  transition: filter .35s ease, opacity .35s ease;
+  pointer-events:none;
+  background-image:url('../../assets/img/poster-final.jpg?v=3');
+  background-repeat:no-repeat;
+  border-radius:2px;
+  box-shadow:0 0 16px rgba(0,0,0,.55); /* adoucit les bords du flou */
+}
+.mask.revealed{opacity:0; filter:blur(0)}
+/* debug: cadres visibles si ?debug=1 */
+.mask.debug{outline:1px dashed rgba(255,255,255,.4)}
     .puzzles{max-width:780px;margin:14px auto;border:1px solid #222;padding:12px}
     .row{display:grid;grid-template-columns:1fr auto;gap:8px;margin:10px 0}
     input{padding:10px;background:#000;color:#fff;border:1px solid #222}
