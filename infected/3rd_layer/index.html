@@ -1,15 +1,107 @@
-<!doctype html><html lang="fr"><head>
-<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
-<title>WARNING // 3rd_layer</title>
-<link rel="stylesheet" href="../../assets/css/style.css">
-</head><body>
-<div class="wrapper">
-  <div class="term">
-    <h2 class="glitch" data-text="WARNING">WARNING</h2>
-    <pre>NETWORK COLLAPSE IN 72H</pre>
-    <p>Entre ton e-mail pour recevoir l’invitation cryptée (lieu/date).</p>
-    <a class="btn" href="https://docs.google.com/forms/d/REPLACE_FORM_ID/viewform" target="_blank">JOIN THE LIST</a>
-    <p style="margin-top:12px;font-size:.9em;opacity:.8">Les inscrits reçoivent un mail chifré avec les coordonnées.</p>
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>REVEAL PROTOCOL // 3rd_layer</title>
+  <link rel="stylesheet" href="../../assets/css/style.css">
+  <style>
+    .count {
+      display:flex; gap:12px; margin:10px 0; flex-wrap:wrap;
+    }
+    .count .cell {
+      border:1px solid #222; padding:10px 14px; min-width:90px; text-align:center;
+    }
+    .hidden { display:none; }
+  </style>
+</head>
+<body>
+  <div class="wrapper">
+    <div class="term">
+      <h2 class="glitch" data-text="REVEAL PROTOCOL // LEVEL 3">REVEAL PROTOCOL // LEVEL 3</h2>
+      <p>Final authentication required to access the reveal party coordinates.</p>
+
+      <!-- Countdown -->
+      <div>
+        <p>System countdown to reveal:</p>
+        <div class="count" id="countWrap">
+          <div class="cell"><div id="d">--</div><small>days</small></div>
+          <div class="cell"><div id="h">--</div><small>hours</small></div>
+          <div class="cell"><div id="m">--</div><small>mins</small></div>
+          <div class="cell"><div id="s">--</div><small>secs</small></div>
+        </div>
+      </div>
+
+      <!-- Final key -->
+      <form id="finalForm" onsubmit="return false;" style="margin-top:14px">
+        <p>Enter final key:</p>
+        <input id="finalInput" autocomplete="off" placeholder="final key">
+        <div style="margin-top:10px"><button id="finalBtn" class="btn">UNLOCK</button></div>
+        <p id="finalMsg" class="blink" style="display:none;color:#f33;margin-top:8px">ACCESS DENIED</p>
+      </form>
+
+      <!-- Coordinates block -->
+      <div id="coords" class="hidden" style="margin-top:16px">
+        <h3 class="glitch" data-text="ACCESS GRANTED // COORDINATES">ACCESS GRANTED // COORDINATES</h3>
+        <p><strong>Date:</strong> <span id="evtDate">2025-12-31 — 20:00</span></p>
+        <p><strong>Location:</strong> <span id="evtLoc">TBA — encrypted address will be emailed to RSVP</span></p>
+        <p><strong>Dress code:</strong> BLACK / RAW</p>
+        <a class="btn" id="rsvpBtn" href="https://tally.so/r/REPLACE_TALLY_ID" target="_blank" rel="noopener">RSVP NOW</a>
+        <p style="opacity:.75;margin-top:10px">Agents with RSVP receive the exact GPS link & entry phrase.</p>
+      </div>
+    </div>
   </div>
-</div>
-</body></html>
+
+<script>
+// --- simple sha256 (browser)
+async function sha256(txt){
+  const enc = new TextEncoder().encode(String(txt).trim().toLowerCase());
+  const buf = await crypto.subtle.digest("SHA-256", enc);
+  return [...new Uint8Array(buf)].map(b=>b.toString(16).padStart(2,"0")).join("");
+}
+
+// default final hash for "rawcode9"
+const FINAL_HASH = "4480588274bd83ac4f3a29a9289b8b7aaedb3c867fd535799028cbf76d6aff0a";
+
+// unlock handler
+document.getElementById('finalBtn').addEventListener('click', async ()=>{
+  const v = document.getElementById('finalInput').value;
+  const h = await sha256(v);
+  if(h === FINAL_HASH){
+    document.getElementById('finalForm').style.display = 'none';
+    document.getElementById('finalMsg').style.display = 'none';
+    document.getElementById('coords').classList.remove('hidden');
+  } else {
+    document.getElementById('finalMsg').style.display = 'block';
+  }
+});
+
+// support ?k=rawcode9 auto-unlock
+(async ()=>{
+  const url = new URL(window.location.href);
+  const k = url.searchParams.get('k');
+  if(k && await sha256(k) === FINAL_HASH){
+    document.getElementById('finalForm').style.display = 'none';
+    document.getElementById('coords').classList.remove('hidden');
+  }
+})();
+
+// simple countdown (edit target date below)
+const targetISO = "2025-12-31T20:00:00Z"; // <- change to your reveal datetime (UTC)
+function tick(){
+  const now = new Date();
+  const t = new Date(targetISO);
+  const diff = Math.max(0, Math.floor((t-now)/1000));
+  const d = Math.floor(diff/86400);
+  const h = Math.floor((diff%86400)/3600);
+  const m = Math.floor((diff%3600)/60);
+  const s = diff%60;
+  document.getElementById('d').textContent = d;
+  document.getElementById('h').textContent = h.toString().padStart(2,'0');
+  document.getElementById('m').textContent = m.toString().padStart(2,'0');
+  document.getElementById('s').textContent = s.toString().padStart(2,'0');
+}
+tick(); setInterval(tick, 1000);
+</script>
+</body>
+</html>
