@@ -1,0 +1,118 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>RAW//CODE — THE FIRST IMPACT</title>
+  <link rel="stylesheet" href="../../assets/css/style.css">
+  <style>
+    .stage{max-width:780px;margin:10px auto;position:relative}
+    #poster{width:100%;display:block;border:1px solid #222}
+    .mask{
+      position:absolute;
+      filter: blur(14px) brightness(120%) contrast(110%);
+      transition: filter .35s ease, opacity .35s ease;
+      pointer-events:none;
+      background-image:url('../../assets/img/poster-final.jpg?v=1');
+      background-repeat:no-repeat;
+      border-radius:2px;
+    }
+    .mask.revealed{opacity:0; filter:blur(0)}
+    .puzzles{max-width:780px;margin:14px auto;border:1px solid #222;padding:12px}
+    .row{display:grid;grid-template-columns:1fr auto;gap:8px;margin:10px 0}
+    input{padding:10px;background:#000;color:#fff;border:1px solid #222}
+    .err{color:#f33;display:none}
+    .coords{display:none;margin-top:14px}
+  </style>
+</head>
+<body>
+  <div class="wrapper">
+    <div class="term">
+      <h2 class="glitch" data-text="THE FIRST IMPACT OF RAW//CODE">THE FIRST IMPACT OF RAW//CODE</h2>
+      <p>27 NOVEMBRE 2025 — 20h → Courfaivre</p>
+
+      <div class="stage">
+        <img id="poster" src="../../assets/img/poster-final.jpg?v=1" alt="poster">
+
+        <!-- Artist masks -->
+        <div class="mask" id="m1" data-rect="62,37,32,9"></div>
+        <div class="mask" id="m2" data-rect="13,53,32,12"></div>
+        <div class="mask" id="m3" data-rect="57,58,34,12"></div>
+        <div class="mask" id="m4" data-rect="12,72,36,12"></div>
+        <div class="mask" id="m5" data-rect="57,77,34,12"></div>
+      </div>
+
+      <div class="puzzles">
+        <div class="row">
+          <input id="q1" placeholder="RAW is a subgenre of ____ ?">
+          <button class="btn" id="b1">UNLOCK #1</button>
+        </div>
+        <p id="e1" class="err">Wrong answer</p>
+
+        <div class="row">
+          <input id="q2" placeholder="Complete: RAW = distorted ____">
+          <button class="btn" id="b2">UNLOCK #2</button>
+        </div>
+        <p id="e2" class="err">Wrong answer</p>
+
+        <div class="row">
+          <input id="q3" placeholder="BUILT ON BASS. FORGED IN ____.">
+          <button class="btn" id="b3">UNLOCK #3</button>
+        </div>
+        <p id="e3" class="err">Wrong answer</p>
+
+        <div class="row">
+          <input id="q4" placeholder="How many slashes in RAW//CODE ?">
+          <button class="btn" id="b4">UNLOCK #4</button>
+        </div>
+        <p id="e4" class="err">Wrong answer</p>
+
+        <div class="row">
+          <input id="q5" placeholder="Ending style after RAW = ____">
+          <button class="btn" id="b5">UNLOCK #5</button>
+        </div>
+        <p id="e5" class="err">Wrong answer</p>
+
+        <div class="coords" id="coords">
+          <h3 class="glitch" data-text="ACCESS GRANTED // COORDINATES">ACCESS GRANTED // COORDINATES</h3>
+          <p><strong>GPS:</strong> 47°20'05.3&quot;N 7°17'28.3&quot;E</p>
+          <p><strong>Venue:</strong> USINE CONDOR — Courfaivre</p>
+          <a class="btn" href="https://tally.so/r/REPLACE_TALLY_ID" target="_blank" rel="noopener">JOIN THE IMPACT</a>
+        </div>
+      </div>
+    </div>
+  </div>
+
+<script>
+function positionMasks(){
+  const img = document.getElementById('poster');
+  const rect = img.getBoundingClientRect();
+  document.querySelectorAll('.mask').forEach(el=>{
+    const [x,y,w,h] = el.dataset.rect.split(',').map(parseFloat);
+    const left=(x/100)*rect.width, top=(y/100)*rect.height;
+    const width=(w/100)*rect.width, height=(h/100)*rect.height;
+    Object.assign(el.style,{
+      left:left+'px', top:top+'px', width:width+'px', height:height+'px',
+      backgroundSize: rect.width+'px '+rect.height+'px',
+      backgroundPosition: '-'+left+'px -'+top+'px'
+    });
+  });
+}
+addEventListener('load', positionMasks);
+addEventListener('resize', positionMasks);
+
+// Riddle checks
+b1.onclick = ()=>{ const v=q1.value.trim().toUpperCase();
+  if(v==='HARDSTYLE'){ m1.classList.add('revealed'); e1.style.display='none'; } else e1.style.display='block'; };
+b2.onclick = ()=>{ const v=q2.value.trim().toUpperCase();
+  if(v==='KICKS'){ m2.classList.add('revealed'); e2.style.display='none'; } else e2.style.display='block'; };
+b3.onclick = ()=>{ const v=q3.value.trim().toUpperCase();
+  if(v==='FIRE'){ m3.classList.add('revealed'); e3.style.display='none'; } else e3.style.display='block'; };
+b4.onclick = ()=>{ const v=q4.value.trim();
+  if(v==='2'){ m4.classList.add('revealed'); e4.style.display='none'; } else e4.style.display='block'; };
+b5.onclick = ()=>{ const v=q5.value.trim().toUpperCase();
+  if(v==='UPTEMPO'){ m5.classList.add('revealed'); e5.style.display='none'; coords.style.display='block'; }
+  else e5.style.display='block'; };
+</script>
+</body>
+</html>

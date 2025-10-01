@@ -1,0 +1,1 @@
+Gate 4 final pack: uses poster-final.jpg, artist-only blur, riddles unchanged.
