@@ -8,19 +8,22 @@
   <style>
     .stage{max-width:780px;margin:10px auto;position:relative}
     #poster{width:100%;display:block;border:1px solid #222}
+    /* Masques floutés */
     .mask{
-      position:absolute; filter: blur(10px) brightness(120%) contrast(110%);
-      transition: filter .5s ease, opacity .5s ease; pointer-events:none;
-      background-image:url('../../assets/img/poster.jpg'); background-repeat:no-repeat;
+      position:absolute;
+      filter: blur(12px) brightness(120%) contrast(110%);
+      transition: filter .35s ease, opacity .35s ease;
+      pointer-events:none;
+      background-image:url('../../assets/img/poster.jpg');
+      background-repeat:no-repeat;
       border-radius:2px;
     }
     .mask.revealed{opacity:0; filter:blur(0)}
+    /* Zone énigmes */
     .puzzles{max-width:780px;margin:14px auto;border:1px solid #222;padding:12px}
-    .puzzles h3{margin:0 0 8px}
-    .row{display:grid;grid-template-columns:1fr auto;gap:8px;margin:8px 0}
+    .row{display:grid;grid-template-columns:1fr auto;gap:8px;margin:10px 0}
     input{padding:10px;background:#000;color:#fff;border:1px solid #222}
-    .ok{color:#0f0}.err{color:#f33}
-    .tease{font-size:.92em;opacity:.85;margin:4px 0 8px}
+    .err{color:#f33;display:none}
     .coords{display:none;margin-top:14px}
   </style>
 </head>
@@ -33,52 +36,54 @@
       <!-- Poster + masks -->
       <div class="stage">
         <img id="poster" src="../../assets/img/poster.jpg" alt="poster">
-        <!-- masks (positions are set by JS from natural-size percentages) -->
-        <div class="mask" id="m1" data-rect="66,35,28,9" title="TOYZ"></div>
-        <div class="mask" id="m2" data-rect="15,63,28,12" title="LØR1"></div>
-        <div class="mask" id="m3" data-rect="61,64,28,12" title="KRYPTIZE"></div>
-        <div class="mask" id="m4" data-rect="15,80,35,12" title="FATBLAST"></div>
-        <div class="mask" id="m5" data-rect="63,82,28,13" title="HITKICKS"></div>
+
+        <!-- Artistes (x,y,w,h en %) — ajustables si besoin -->
+        <!-- TOYZ (haut-droite) -->
+        <div class="mask" id="m1" data-rect="66,35,28,9"  title="TOYZ"></div>
+        <!-- LØR1 (gauche milieu) -->
+        <div class="mask" id="m2" data-rect="12,58,30,12" title="LØR1"></div>
+        <!-- KRYPTIZE (droite milieu) -->
+        <div class="mask" id="m3" data-rect="59,59,30,12" title="KRYPTIZE"></div>
+        <!-- FATBLAST (bas gauche) -->
+        <div class="mask" id="m4" data-rect="12,76,36,12" title="FATBLAST"></div>
+        <!-- HITKICKS (bas droite) -->
+        <div class="mask" id="m5" data-rect="60,77,30,13" title="HITKICKS"></div>
+
+        <!-- Bande basse toujours floutée (adresse/credits) -->
+        <div class="mask" id="mbottom" data-rect="0,90,100,10" title="BOTTOM"></div>
       </div>
 
-      <!-- Riddles -->
+      <!-- Énigmes (sans texte teaser au-dessus) -->
       <div class="puzzles">
-        <h3>UNLOCK THE LINE-UP</h3>
-
-        <div class="tease"><strong>TOYZ</strong> — opening hard techno // raw ignition</div>
         <div class="row">
-          <input id="q1" placeholder='RAW is a subgenre of ____ ?'>
+          <input id="q1" placeholder="RAW is a subgenre of ____ ?">
           <button class="btn" id="b1">UNLOCK #1</button>
         </div>
-        <p id="m1msg" class="err" style="display:none">Wrong answer</p>
+        <p id="e1" class="err">Wrong answer</p>
 
-        <div class="tease"><strong>LØR1</strong> — sharp kicks // tunnel vision</div>
         <div class="row">
-          <input id="q2" placeholder='Complete: RAW = distorted ____'>
+          <input id="q2" placeholder="Complete: RAW = distorted ____">
           <button class="btn" id="b2">UNLOCK #2</button>
         </div>
-        <p id="m2msg" class="err" style="display:none">Wrong answer</p>
+        <p id="e2" class="err">Wrong answer</p>
 
-        <div class="tease"><strong>KRYPTIZE</strong> — forged in fire // raw ritual</div>
         <div class="row">
-          <input id="q3" placeholder='Fill in the slogan: BUILT ON BASS. FORGED IN ____.'>
+          <input id="q3" placeholder="BUILT ON BASS. FORGED IN ____.">
           <button class="btn" id="b3">UNLOCK #3</button>
         </div>
-        <p id="m3msg" class="err" style="display:none">Wrong answer</p>
+        <p id="e3" class="err">Wrong answer</p>
 
-        <div class="tease"><strong>FATBLAST</strong> — heavy patterns // slash the system</div>
         <div class="row">
-          <input id="q4" placeholder='How many slashes in RAW//CODE ?'>
+          <input id="q4" placeholder="How many slashes in RAW//CODE ?">
           <button class="btn" id="b4">UNLOCK #4</button>
         </div>
-        <p id="m4msg" class="err" style="display:none">Wrong answer</p>
+        <p id="e4" class="err">Wrong answer</p>
 
-        <div class="tease"><strong>HITKICKS</strong> — ending uptempo // final impact</div>
         <div class="row">
-          <input id="q5" placeholder='Ending style after RAW = ____'>
+          <input id="q5" placeholder="Ending style after RAW = ____">
           <button class="btn" id="b5">UNLOCK #5</button>
         </div>
-        <p id="m5msg" class="err" style="display:none">Wrong answer</p>
+        <p id="e5" class="err">Wrong answer</p>
 
         <div class="coords" id="coords">
           <h3 class="glitch" data-text="ACCESS GRANTED // COORDINATES">ACCESS GRANTED // COORDINATES</h3>
@@ -91,56 +96,44 @@
   </div>
 
 <script>
-// Position masks to match the poster using percentage rects (x,y,w,h) in % of image natural size.
+/* Positionne les masques selon data-rect="x,y,w,h" en % de l'image */
 function positionMasks(){
   const img = document.getElementById('poster');
   const rect = img.getBoundingClientRect();
-  const natW = img.naturalWidth, natH = img.naturalHeight;
   document.querySelectorAll('.mask').forEach(el=>{
     const [x,y,w,h] = el.dataset.rect.split(',').map(parseFloat);
-    const left = rect.left + (x/100)*rect.width;
-    const top  = rect.top  + (y/100)*rect.height;
+    const left = (x/100)*rect.width;
+    const top  = (y/100)*rect.height;
     const width= (w/100)*rect.width;
     const height=(h/100)*rect.height;
-    Object.assign(el.style, {
+    Object.assign(el.style,{
       left: left + 'px', top: top + 'px', width: width + 'px', height: height + 'px',
       backgroundSize: rect.width + 'px ' + rect.height + 'px',
-      backgroundPosition: '-' + ( (x/100)*rect.width ) + 'px -' + ( (y/100)*rect.height ) + 'px'
+      backgroundPosition: '-' + left + 'px -' + top + 'px'
     });
   });
 }
-window.addEventListener('load', positionMasks);
-window.addEventListener('resize', positionMasks);
+addEventListener('load', positionMasks);
+addEventListener('resize', positionMasks);
 
-// Checks
-document.getElementById('b1').onclick = ()=>{
-  const v = document.getElementById('q1').value.trim().toUpperCase();
-  if(v === 'HARDSTYLE'){ document.getElementById('m1').classList.add('revealed'); document.getElementById('m1msg').style.display='none'; }
-  else { document.getElementById('m1msg').style.display='block'; }
+/* Vérifs des énigmes */
+b1.onclick = ()=>{ const v=q1.value.trim().toUpperCase();
+  if(v==='HARDSTYLE'){ m1.classList.add('revealed'); e1.style.display='none'; } else e1.style.display='block';
 };
-document.getElementById('b2').onclick = ()=>{
-  const v = document.getElementById('q2').value.trim().toUpperCase();
-  if(v === 'KICKS'){ document.getElementById('m2').classList.add('revealed'); document.getElementById('m2msg').style.display='none'; }
-  else { document.getElementById('m2msg').style.display='block'; }
+b2.onclick = ()=>{ const v=q2.value.trim().toUpperCase();
+  if(v==='KICKS'){ m2.classList.add('revealed'); e2.style.display='none'; } else e2.style.display='block';
 };
-document.getElementById('b3').onclick = ()=>{
-  const v = document.getElementById('q3').value.trim().toUpperCase();
-  if(v === 'FIRE'){ document.getElementById('m3').classList.add('revealed'); document.getElementById('m3msg').style.display='none'; }
-  else { document.getElementById('m3msg').style.display='block'; }
+b3.onclick = ()=>{ const v=q3.value.trim().toUpperCase();
+  if(v==='FIRE'){ m3.classList.add('revealed'); e3.style.display='none'; } else e3.style.display='block';
 };
-document.getElementById('b4').onclick = ()=>{
-  const v = document.getElementById('q4').value.trim();
-  if(v === '2'){ document.getElementById('m4').classList.add('revealed'); document.getElementById('m4msg').style.display='none'; }
-  else { document.getElementById('m4msg').style.display='block'; }
+b4.onclick = ()=>{ const v=q4.value.trim();
+  if(v==='2'){ m4.classList.add('revealed'); e4.style.display='none'; } else e4.style.display='block';
 };
-document.getElementById('b5').onclick = ()=>{
-  const v = document.getElementById('q5').value.trim().toUpperCase();
-  if(v === 'UPTEMPO'){ 
-    document.getElementById('m5').classList.add('revealed'); 
-    document.getElementById('m5msg').style.display='none'; 
-    document.getElementById('coords').style.display='block';
-  } else { document.getElementById('m5msg').style.display='block'; }
+b5.onclick = ()=>{ const v=q5.value.trim().toUpperCase();
+  if(v==='UPTEMPO'){ m5.classList.add('revealed'); e5.style.display='none'; coords.style.display='block'; }
+  else e5.style.display='block';
 };
 </script>
 </body>
 </html>
+
