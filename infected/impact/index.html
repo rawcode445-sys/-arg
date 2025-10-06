@@ -125,31 +125,7 @@ b5.onclick = ()=>{ const v=q5.value.trim().toUpperCase();
   if(v==='UPTEMPO'){ m5.classList.add('revealed'); e5.style.display='none'; coords.style.display='block'; }
   else e5.style.display='block'; };
 <script>
-function positionMasks(){
-  const img = document.getElementById('poster');
-  const rect = img.getBoundingClientRect();
-  document.querySelectorAll('.mask').forEach(el=>{
-    const [x,y,w,h] = el.dataset.rect.split(',').map(parseFloat);
-    const left   = (x/100)*rect.width;
-    const top    = (y/100)*rect.height;
-    const width  = (w/100)*rect.width;
-    const height = (h/100)*rect.height;
-    Object.assign(el.style,{
-      left:left+'px', top:top+'px', width:width+'px', height:height+'px',
-      backgroundSize: rect.width+'px '+rect.height+'px',
-      backgroundPosition: '-'+left+'px -'+top+'px'
-    });
-  });
-}
-
-addEventListener('load', positionMasks);
-addEventListener('resize', positionMasks);
-
-if (new URL(location.href).searchParams.get('debug')==='1') {
-  document.querySelectorAll('.mask').forEach(m=>m.classList.add('debug'));
-}
-</script>
-    <script>
+/* positionne les masques sur le poster */
 function positionMasks(){
   const img = document.getElementById('poster');
   const rect = img.getBoundingClientRect();
@@ -169,10 +145,33 @@ function positionMasks(){
 addEventListener('load', positionMasks);
 addEventListener('resize', positionMasks);
 
-// mode debug: ajoute ?debug=1 à l'URL pour voir les cadres
+/* vérifie les réponses et retire le floutage */
+function unlock(maskId, inputId, correctAnswers) {
+  const val = document.getElementById(inputId).value.trim().toUpperCase();
+  const mask = document.getElementById(maskId);
+  const err = document.getElementById('e' + maskId.slice(1));
+  if (correctAnswers.includes(val)) {
+    mask.classList.add('revealed');
+    err.style.display = 'none';
+  } else {
+    err.style.display = 'block';
+  }
+}
+
+/* boutons d’activation */
+document.getElementById('b1').onclick = ()=>unlock('m1','q1',['HARDSTYLE']);
+document.getElementById('b2').onclick = ()=>unlock('m2','q2',['KICKS']);
+document.getElementById('b3').onclick = ()=>unlock('m3','q3',['FIRE']);
+document.getElementById('b4').onclick = ()=>unlock('m4','q4',['2']);
+document.getElementById('b5').onclick = ()=>unlock('m5','q5',['UPTEMPO']);
+
+/* debug : afficher les cadres si ?debug=1 */
 if (new URL(location.href).searchParams.get('debug')==='1') {
   document.querySelectorAll('.mask').forEach(m=>m.classList.add('debug'));
 }
+</script>
+</body>
+</html>
 </script>
 </body>
 </html>
