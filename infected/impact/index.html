@@ -125,7 +125,6 @@ b5.onclick = ()=>{ const v=q5.value.trim().toUpperCase();
   if(v==='UPTEMPO'){ m5.classList.add('revealed'); e5.style.display='none'; coords.style.display='block'; }
   else e5.style.display='block'; };
 <script>
-/* positionne les masques sur le poster */
 function positionMasks(){
   const img = document.getElementById('poster');
   const rect = img.getBoundingClientRect();
@@ -145,33 +144,40 @@ function positionMasks(){
 addEventListener('load', positionMasks);
 addEventListener('resize', positionMasks);
 
-/* vérifie les réponses et retire le floutage */
+/* petit son quand un flou se retire */
+function playRevealSound() {
+  const audio = new Audio('../../assets/sfx/glitch.mp3');
+  audio.volume = 0.6;
+  audio.play().catch(()=>{});
+}
+
+/* vérifie la réponse pour un seul champ */
 function unlock(maskId, inputId, correctAnswers) {
   const val = document.getElementById(inputId).value.trim().toUpperCase();
   const mask = document.getElementById(maskId);
   const err = document.getElementById('e' + maskId.slice(1));
   if (correctAnswers.includes(val)) {
-    mask.classList.add('revealed');
+    if (!mask.classList.contains('revealed')) { // évite double animation
+      mask.classList.add('revealed');
+      playRevealSound();
+    }
     err.style.display = 'none';
   } else {
     err.style.display = 'block';
   }
 }
 
-/* boutons d’activation */
+/* relie chaque bouton à sa question et son masque */
 document.getElementById('b1').onclick = ()=>unlock('m1','q1',['HARDSTYLE']);
 document.getElementById('b2').onclick = ()=>unlock('m2','q2',['KICKS']);
 document.getElementById('b3').onclick = ()=>unlock('m3','q3',['FIRE']);
 document.getElementById('b4').onclick = ()=>unlock('m4','q4',['2']);
 document.getElementById('b5').onclick = ()=>unlock('m5','q5',['UPTEMPO']);
 
-/* debug : afficher les cadres si ?debug=1 */
+/* mode debug */
 if (new URL(location.href).searchParams.get('debug')==='1') {
   document.querySelectorAll('.mask').forEach(m=>m.classList.add('debug'));
 }
-</script>
-</body>
-</html>
 </script>
 </body>
 </html>
