@@ -18,3 +18,20 @@ h1,h2,pre,code{margin:0 0 12px}
 .glitch:after{transform:translateX(2px);text-shadow:-1px 0 #0ff;mix-blend-mode:screen}
 .blink{animation:blink 1s steps(2,end) infinite}@keyframes blink{50%{opacity:.25}}
 footer{opacity:.6;margin-top:16px;font-size:.85em}
+/* ton ancien style ici */
+
+/* --- floutage des artistes --- */
+.mask{
+  position:absolute;
+  z-index:2;
+  filter: blur(18px) brightness(120%) contrast(110%);
+  transition: filter .35s ease, opacity .35s ease;
+  pointer-events:none;
+  background-image:url('../../assets/img/poster-final.jpg');
+  background-repeat:no-repeat;
+  border-radius:2px;
+  box-shadow:0 0 16px rgba(0,0,0,.55);
+}
+.mask.revealed{opacity:0; filter:blur(0)}
+.mask.debug{outline:1px dashed rgba(255,255,255,.4)}
+
