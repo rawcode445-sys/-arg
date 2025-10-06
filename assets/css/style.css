@@ -1,44 +1,96 @@
-:root { --bg:#000; --fg:#fff; --accent:#ff1a1a; --mono: "IBM Plex Mono", monospace; }
-*{box-sizing:border-box}
-html,body{margin:0;background:var(--bg);color:var(--fg);font-family:var(--mono);}
-.wrapper{min-height:100dvh;display:grid;place-items:center;padding:24px}
-.term{
-  max-width:780px;width:100%;border:1px solid #222;padding:24px;background:#050505;
-  box-shadow:0 0 40px #000 inset; position:relative; overflow:hidden;
-}
-h1,h2,pre,code{margin:0 0 12px}
-.btn{display:inline-block;padding:10px 16px;border:1px solid var(--accent);
-  text-decoration:none;color:var(--fg);letter-spacing:.08em}
-.btn:hover{background:#200}
-.glitch{position:relative;display:inline-block}
-.glitch:before,.glitch:after{
-  content:attr(data-text);position:absolute;left:0;top:0;clip-path:inset(0 0 0 0);
-}
-.glitch:before{transform:translateX(-2px);text-shadow:1px 0 var(--accent);mix-blend-mode:screen}
-.glitch:after{transform:translateX(2px);text-shadow:-1px 0 #0ff;mix-blend-mode:screen}
-.blink{animation:blink 1s steps(2,end) infinite}@keyframes blink{50%{opacity:.25}}
-footer{opacity:.6;margin-top:16px;font-size:.85em}
-/* ton ancien style ici */
 
-/* --- floutage des artistes --- */
-.mask{
+body {
+  margin:0;
+  background:black;
+  color:#00ff88;
+  font-family:'Courier New', monospace;
+  overflow-x:hidden;
+}
+
+.hidden{display:none;}
+
+.intro {
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  height:100vh;
+  background:black;
+  color:#00ff88;
+  font-family:'Courier New', monospace;
+  font-size:1.2rem;
+  animation:scanlines 0.05s infinite;
+}
+
+@keyframes scanlines {
+  0%,100%{opacity:0.98;}
+  50%{opacity:1;}
+}
+
+.poster-container {
+  position:relative;
+  width:90%;
+  max-width:800px;
+  margin:20px auto;
+}
+.poster-container img {
+  width:100%;
+  display:block;
+}
+
+.mask {
   position:absolute;
   z-index:2;
-  filter: blur(32px) brightness(135%) contrast(125%);
-  transition: filter .35s ease, opacity .35s ease;
+  filter:blur(32px) brightness(135%) contrast(125%);
+  transition:filter .35s ease, opacity .35s ease;
   pointer-events:none;
-  background-image:url('../../assets/img/poster-final.jpg');
+  background-image:url('../img/poster-final.jpg');
   background-repeat:no-repeat;
   border-radius:3px;
   box-shadow:0 0 26px rgba(0,0,0,.7);
+  opacity:1;
 }
+
 .mask.revealed {
-  animation: revealFlash 0.6s ease forwards;
+  opacity:0;
+  filter:blur(0);
+  animation:revealFlash .6s ease forwards;
 }
-.mask.debug{outline:1px dashed rgba(255,255,255,.4)}
+
 @keyframes revealFlash {
-  0%   { filter: brightness(300%) contrast(200%) blur(10px); opacity:1; }
-  40%  { filter: brightness(200%) contrast(150%) blur(4px); opacity:0.9; }
-  70%  { filter: brightness(150%) contrast(120%) blur(2px); opacity:0.8; }
-  100% { filter: blur(0); opacity:1; }
+  0%{filter:brightness(300%) contrast(200%) blur(10px);opacity:1;}
+  40%{filter:brightness(200%) contrast(150%) blur(4px);opacity:0.9;}
+  70%{filter:brightness(150%) contrast(120%) blur(2px);opacity:0.8;}
+  100%{filter:blur(0);opacity:1;}
+}
+
+.title {
+  text-align:center;
+  font-size:1.8rem;
+  margin-top:40px;
+  letter-spacing:3px;
+  animation:glow 2s infinite alternate;
+}
+
+@keyframes glow {
+  from {text-shadow:0 0 10px #00ff88;}
+  to {text-shadow:0 0 25px #00ff88;}
+}
+
+.questions {
+  text-align:center;
+  margin:30px;
+}
+.questions input {
+  background:transparent;
+  border:1px solid #00ff88;
+  color:#00ff88;
+  padding:6px;
+  margin:4px;
+}
+.questions button {
+  background:#00ff88;
+  color:black;
+  border:none;
+  padding:6px 12px;
+  cursor:pointer;
 }
