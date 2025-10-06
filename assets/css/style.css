@@ -24,14 +24,13 @@ footer{opacity:.6;margin-top:16px;font-size:.85em}
 .mask{
   position:absolute;
   z-index:2;
-  filter: blur(18px) brightness(120%) contrast(110%);
+  filter: blur(24px) brightness(130%) contrast(120%);
   transition: filter .35s ease, opacity .35s ease;
   pointer-events:none;
   background-image:url('../../assets/img/poster-final.jpg');
   background-repeat:no-repeat;
   border-radius:2px;
-  box-shadow:0 0 16px rgba(0,0,0,.55);
+  box-shadow:0 0 20px rgba(0,0,0,.65);
 }
 .mask.revealed{opacity:0; filter:blur(0)}
 .mask.debug{outline:1px dashed rgba(255,255,255,.4)}
-
