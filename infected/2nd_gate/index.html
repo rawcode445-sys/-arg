@@ -1,92 +1,36 @@
 <!doctype html>
-<html lang="en">
-<head>
-  <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width,initial-scale=1">
-  <title>ACCESS LEVEL 2 : 2nd_gate</title>
-  <link rel="stylesheet" href="../../assets/css/style.css">
-  <style>
-    #teaser {
-      max-width:720px;
-      margin:12px 0;
-      filter: blur(25px) grayscale(100%);
-      transition: filter 800ms ease;
-      border:1px solid #222;
-      display:block;
-      width:100%;
-    }
-    #teaser.revealed { filter: none; }
-  </style>
+<html lang="fr"><head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Gate 2 — SIGNAL</title>
+<link rel="stylesheet" href="../../assets/css/style.css">
 </head>
 <body>
-  <div class="wrapper">
-    <div class="term">
-      <h2 class="glitch" data-text="FIREWALL//DISARMED">FIREWALL//DISARMED</h2>
-
-      <!-- Hidden teaser (user's glitch photo) -->
-      <div><img id="teaser" src="../../assets/img/teaser-fragment.png" alt="teaser glitch"></div>
-
-      <p>To reveal the hidden fragment, solve this:</p>
-      <form id="revealForm" onsubmit="return false;">
-        <p>18-1-23 = ?</p>
-        <input id="revealAnswer" placeholder="Answer...">
-        <button class="btn">REVEAL</button>
-        <p id="revealMsg" style="color:#f33;display:none">Incorrect</p>
-      </form>
-
-      <!-- After reveal -->
-      <div id="afterReveal" style="display:none;margin-top:15px">
-        <p>SYSTEM UPDATE: Fragment decrypted. Proceed with validation.</p>
-
-        <form id="quiz" onsubmit="return false;">
-          <p>Q1: Complete the code → RAW//____</p>
-          <input id="q1" placeholder="Answer...">
-
-          <p>Q2: System log: 2 + 0 + 2 + 5 = ?</p>
-          <input id="q2" placeholder="Answer...">
-
-          <button id="checkBtn" class="btn">VALIDATE</button>
-          <p id="msg" style="color:#f33;display:none">Incorrect answers</p>
-        </form>
-
-        <div id="eliteMsg" style="display:none;margin-top:15px;font-weight:bold;color:#0f0">
-          Well done agent, you are part of the elite // priority access granted.
-        </div>
-
-        <a id="accessBtn" class="btn" href="https://tally.so/r/w7GQ2L" target="_blank" rel="noopener" style="display:none;margin-top:15px">
-          REQUEST ACCESS
-        </a>
-      </div>
+<div class="wrapper">
+  <div class="term">
+    <h2>GATE 2 — SIGNAL</h2>
+    <p>Résous 2 énigmes simples pour stabiliser le signal.</p>
+    <div style="text-align:center;margin:10px 0">
+      <img id="snap" src="../../assets/img/poster-final.jpg" style="max-width:560px;width:100%" class="blurbox" alt="signal">
     </div>
+
+    <div class="row">
+      <input id="q1" placeholder="Combien de slashes dans RAW//CODE ?">
+      <button class="btn" id="b1">Valider</button>
+    </div>
+    <p id="e1" class="err">Mauvaise réponse.</p>
+
+    <div class="row">
+      <input id="q2" placeholder="BUILT ON BASS. FORGED IN ____.">
+      <button class="btn" id="b2">Valider</button>
+    </div>
+    <p id="e2" class="err">Mauvaise réponse.</p>
+
+    <p id="ok" style="display:none">Signal stabilisé. Continue à <a href="../3rd_layer/">Gate 3</a>.</p>
   </div>
-
+</div>
 <script>
-// Reveal the image if the riddle is solved
-document.getElementById('revealForm').addEventListener('submit', ()=>{
-  const val = document.getElementById('revealAnswer').value.trim().toUpperCase();
-  if(val === "RAW"){
-    document.getElementById('teaser').classList.add('revealed');
-    document.getElementById('afterReveal').style.display = 'block';
-    document.getElementById('revealForm').style.display = 'none';
-  } else {
-    document.getElementById('revealMsg').style.display = 'block';
-  }
-});
-
-// Quiz for access (Q1=CODE, Q2=9)
-document.getElementById('checkBtn').addEventListener('click', ()=>{
-  const r1 = document.getElementById('q1').value.trim().toUpperCase();
-  const r2 = document.getElementById('q2').value.trim();
-
-  if(r1 === "CODE" && r2 === "9"){
-    document.getElementById('quiz').style.display = 'none';
-    document.getElementById('msg').style.display = 'none';
-    document.getElementById('eliteMsg').style.display = 'block';
-    document.getElementById('accessBtn').style.display = 'inline-block';
-  } else {
-    document.getElementById('msg').style.display = 'block';
-  }
-});
+let s1=false,s2=false;
+b1.onclick=()=>{{const v=q1.value.trim(); if(v==='2'){{ e1.style.display='none'; s1=true; }} else e1.style.display='block'; snap.classList.toggle('show',s1&&s2); ok.style.display=(s1&&s2)?'block':'none';}};
+b2.onclick=()=>{{const v=q2.value.trim().toUpperCase(); if(v==='FIRE'){{ e2.style.display='none'; s2=true; }} else e2.style.display='block'; snap.classList.toggle('show',s1&&s2); ok.style.display=(s1&&s2)?'block':'none';}};
 </script>
-</body>
-</html>
+</body></html>
