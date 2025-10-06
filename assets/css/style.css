@@ -32,5 +32,13 @@ footer{opacity:.6;margin-top:16px;font-size:.85em}
   border-radius:3px;
   box-shadow:0 0 26px rgba(0,0,0,.7);
 }
-.mask.revealed{opacity:0; filter:blur(0)}
+.mask.revealed {
+  animation: revealFlash 0.6s ease forwards;
+}
 .mask.debug{outline:1px dashed rgba(255,255,255,.4)}
+@keyframes revealFlash {
+  0%   { filter: brightness(300%) contrast(200%) blur(10px); opacity:1; }
+  40%  { filter: brightness(200%) contrast(150%) blur(4px); opacity:0.9; }
+  70%  { filter: brightness(150%) contrast(120%) blur(2px); opacity:0.8; }
+  100% { filter: blur(0); opacity:1; }
+}
