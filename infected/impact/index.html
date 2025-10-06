@@ -146,5 +146,30 @@ if (new URL(location.href).searchParams.get('debug')==='1') {
   document.querySelectorAll('.mask').forEach(m=>m.classList.add('debug'));
 }
 </script>
+    <script>
+function positionMasks(){
+  const img = document.getElementById('poster');
+  const rect = img.getBoundingClientRect();
+  document.querySelectorAll('.mask').forEach(el=>{
+    const [x,y,w,h] = el.dataset.rect.split(',').map(parseFloat);
+    const left = (x/100)*rect.width;
+    const top = (y/100)*rect.height;
+    const width = (w/100)*rect.width;
+    const height = (h/100)*rect.height;
+    Object.assign(el.style,{
+      left:left+'px', top:top+'px', width:width+'px', height:height+'px',
+      backgroundSize: rect.width+'px '+rect.height+'px',
+      backgroundPosition: '-'+left+'px -'+top+'px'
+    });
+  });
+}
+addEventListener('load', positionMasks);
+addEventListener('resize', positionMasks);
+
+// mode debug: ajoute ?debug=1 à l'URL pour voir les cadres
+if (new URL(location.href).searchParams.get('debug')==='1') {
+  document.querySelectorAll('.mask').forEach(m=>m.classList.add('debug'));
+}
+</script>
 </body>
 </html>
