@@ -1,34 +1,31 @@
 
-:root{--green:#00ff88;--bg:#0a0a0a;--fg:#eaeaea;--red:#ff3355}
-*{box-sizing:border-box}
+:root{--green:#00ff88;--fg:#eaeaea;--red:#ff3355}
 html,body{margin:0;padding:0;background:transparent;color:var(--fg);font-family:Consolas,Menlo,monospace}
-.wrapper{max-width:960px;margin:24px auto;padding:0 12px}
-.term{border:1px solid rgba(0,255,136,.18);background:rgba(0,0,0,.55);backdrop-filter: blur(2px);padding:14px;border-radius:8px;box-shadow:0 0 24px rgba(0,0,0,.35)}
-h1,h2{letter-spacing:.08em;text-shadow:0 0 8px rgba(0,255,136,.25)}
-.btn{display:inline-block;padding:9px 14px;border:1px solid var(--red);text-decoration:none;color:var(--fg);background:rgba(0,0,0,.35);cursor:pointer;border-radius:6px}
-.btn:hover{filter:brightness(120%)}
-input,button{font-family:inherit}
-input{background:rgba(0,0,0,.6);color:#dfffe6;border:1px solid rgba(0,255,136,.22);padding:10px;width:100%;border-radius:6px}
+.wrapper{max-width:960px;margin:26px auto;padding:0 12px}
+.term{
+  border:1px solid rgba(0,255,136,.20);
+  background:rgba(0,0,0,.55);   /* <= blocks visible again */
+  backdrop-filter: blur(1.5px);
+  padding:16px;border-radius:10px;
+  box-shadow:0 8px 28px rgba(0,0,0,.45);
+}
+h1,h2{letter-spacing:.08em;text-shadow:0 0 8px rgba(0,255,136,.22)}
+.btn{
+  display:inline-block;padding:10px 14px;border:1px solid var(--red);
+  text-decoration:none;color:var(--fg);background:rgba(0,0,0,.40);  /* buttons readable */
+  cursor:pointer;border-radius:8px
+}
+.btn:hover{filter:brightness(115%)}
+input{
+  background:rgba(0,0,0,.45);
+  color:#dfffe6;border:1px solid rgba(0,255,136,.24);
+  padding:10px;width:100%;border-radius:8px
+}
 .row{display:grid;grid-template-columns:1fr auto;gap:8px;margin:10px 0}
 .err{color:#ff5577;display:none}
 .center{text-align:center}
 
-/* Shared Gate4 helpers */
-.hidden{display:none}
-.title{color:var(--green);text-align:center;margin-top:8px;letter-spacing:.2em;text-shadow:0 0 12px var(--green)}
+/* Gate 4 masks kept strong */
 .poster{position:relative;width:92%;max-width:900px;margin:20px auto}
 .poster img{width:100%;display:block;border:1px solid rgba(255,255,255,.06);border-radius:6px}
-.mask{position:absolute;z-index:2;filter:blur(32px) brightness(135%) contrast(125%);transition:filter .35s ease, opacity .35s ease;pointer-events:none;background-image:url('../../assets/img/poster-final.jpg');background-repeat:no-repeat;border-radius:4px;box-shadow:0 0 26px rgba(0,0,0,.7);opacity:1}
-.mask.revealed{opacity:0;filter:blur(0);animation:revealFlash .6s ease forwards}
-.mask.debug{outline:1px dashed rgba(255,0,0,.55)}
-@keyframes revealFlash{0%{filter:brightness(300%) contrast(200%) blur(10px);opacity:1}40%{filter:brightness(200%) contrast(150%) blur(4px);opacity:.95}70%{filter:brightness(150%) contrast(120%) blur(2px);opacity:.85}100%{filter:blur(0);opacity:1}}
-.questions{text-align:center;margin:18px}
-.questions input{border:1px solid rgba(0,255,136,.3);color:#aaffdd;background:rgba(0,0,0,.45);width:auto}
-.questions button{background:var(--green);color:#001;border:none;padding:8px 12px;margin-left:6px;border-radius:6px}
-
-/* Gate2 reveal */
-.blurbox{filter:blur(10px);transition:filter .35s ease}
-.show{filter:blur(0)}
-
-/* Buttons on home */
-.home-links .btn{margin:0 6px 6px 0}
+.poster .mask{ filter: blur(45px) brightness(120%) contrast(110%); }

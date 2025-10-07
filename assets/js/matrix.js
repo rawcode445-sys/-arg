@@ -1,70 +1,49 @@
 
+// Matrix rain visibility balanced (content readable, rain visible)
 (function(){
   function assetsBase(){
-    try {
-      const script = document.currentScript || Array.from(document.scripts).slice(-1)[0];
-      const src = new URL(script.src, location.href);
-      return src.pathname.replace(/assets\/js\/[^/]+$/, 'assets/');
-    } catch(e){
-      const path = location.pathname;
-      if (path.includes('/infected/')) return path.split('/infected/')[0] + 'assets/';
-      return (path.endsWith('/') ? path : path.replace(/\/[^/]*$/, '/')) + 'assets/';
-    }
+    try{const s=document.currentScript||Array.from(document.scripts).slice(-1)[0];const u=new URL(s.src,location.href);return u.pathname.replace(/assets\/js\/[^/]+$/,'assets/');}
+    catch(e){const p=location.pathname;return p.includes('/infected/')?p.split('/infected/')[0]+'assets/':(p.endsWith('/')?p:p.replace(/\/[^/]*$/,'/'))+'assets/';}
   }
-  const ASSETS = assetsBase();
+  const ASSETS=assetsBase();
 
-  const canvas = document.createElement('canvas');
-  Object.assign(canvas.style, {position:'fixed', inset:0, width:'100vw', height:'100vh', zIndex:'0', pointerEvents:'none', background:'transparent'});
-  document.documentElement.appendChild(canvas);
-  const ctx = canvas.getContext('2d');
+  const c=document.createElement('canvas');
+  Object.assign(c.style,{position:'fixed',inset:0,width:'100vw',height:'100vh',zIndex:'0',pointerEvents:'none',background:'transparent'});
+  document.documentElement.appendChild(c);
+  const ctx=c.getContext('2d');
 
-  function resize(){
-    canvas.width = innerWidth * devicePixelRatio;
-    canvas.height = innerHeight * devicePixelRatio;
-    ctx.setTransform(devicePixelRatio,0,0,devicePixelRatio,0,0);
-  }
-  addEventListener('resize', resize, {passive:true});
-  resize();
+  function resize(){c.width=innerWidth*devicePixelRatio;c.height=innerHeight*devicePixelRatio;ctx.setTransform(devicePixelRatio,0,0,devicePixelRatio,0,0);}
+  addEventListener('resize',resize,{passive:true}); resize();
 
-  const glyphs = 'アイウエオｱｲｳｴｵ01RAW//CODE#*$@+-';
-  let columns = [];
-  function initColumns(){
-    const fontSize = 16;
-    const cols = Math.ceil(innerWidth / fontSize);
-    columns = new Array(cols).fill(0).map(()=> Math.floor(Math.random()*innerHeight));
-  }
-  initColumns();
-  addEventListener('resize', initColumns, {passive:true});
+  const glyphs='アイウエオｱｲｳｴｵ01RAW//CODE#*$@+-';
+  let cols=[];
+  const FS=18;                       // font size
+  const TRAIL=0.06;                  // background overlay (darker than 0.04)
+  function init(){const n=Math.ceil(innerWidth/FS); cols=new Array(n).fill(0).map(()=>Math.floor(Math.random()*innerHeight));}
+  init(); addEventListener('resize',init,{passive:true});
 
   function draw(){
-    ctx.fillStyle = 'rgba(0, 0, 0, 0.08)';
-    ctx.fillRect(0,0,canvas.width,canvas.height);
-    ctx.fillStyle = '#00ff88';
-    ctx.font = '16px Consolas, monospace';
-    const fontSize = 16;
-    for (let i=0;i<columns.length;i++){
-      const text = glyphs[Math.floor(Math.random()*glyphs.length)];
-      const x = i * fontSize;
-      const y = columns[i] * fontSize;
-      ctx.fillText(text, x, y);
-      if (y > innerHeight && Math.random() > 0.975) columns[i] = 0; else columns[i] += 1;
+    ctx.fillStyle=`rgba(0,0,0,${TRAIL})`;
+    ctx.fillRect(0,0,c.width,c.height);
+    ctx.shadowColor='#00ff88'; ctx.shadowBlur=6;  // moderate glow
+    ctx.fillStyle='#00ff88'; ctx.font=FS+'px Consolas, monospace';
+    for(let i=0;i<cols.length;i++){
+      const ch=glyphs[Math.floor(Math.random()*glyphs.length)];
+      const x=i*FS, y=cols[i]*FS;
+      ctx.fillText(ch,x,y);
+      if(y>innerHeight && Math.random()>0.975) cols[i]=0; else cols[i]+=1; // pace
     }
+    ctx.shadowBlur=0;
     requestAnimationFrame(draw);
   }
   draw();
 
-  // Ambient audio (unmute on first user gesture)
-  const audio = new Audio(ASSETS + 'sfx/ambient.wav');
-  audio.loop = true; audio.volume = 0.12; audio.muted = true;
-  function tryPlay(){ audio.muted = false; audio.play().catch(()=>{}); }
-  document.addEventListener('click', tryPlay, {once:true});
-  document.addEventListener('keydown', tryPlay, {once:true});
-  document.addEventListener('touchstart', tryPlay, {once:true});
-
-  // Mute/Unmute button
-  const btn = document.createElement('button');
-  btn.textContent = '🔇';
-  Object.assign(btn.style, {position:'fixed', right:'10px', bottom:'10px', zIndex:'99999', background:'rgba(0,0,0,0.6)', color:'#00ff88', border:'1px solid rgba(0,255,136,0.35)', borderRadius:'8px', padding:'6px 8px', cursor:'pointer', fontFamily:'Consolas, monospace'});
-  btn.onclick = ()=>{ audio.muted = !audio.muted; if(!audio.muted && audio.paused){ audio.play().catch(()=>{});} btn.textContent = audio.muted ? '🔇' : '🔊'; };
+  // Ambient audio toggle kept
+  const a=new Audio(ASSETS+'sfx/ambient.wav'); a.loop=true; a.volume=0.12; a.muted=true;
+  const play=()=>{a.muted=false; a.play().catch(()=>{});};
+  document.addEventListener('click',play,{once:true}); document.addEventListener('keydown',play,{once:true}); document.addEventListener('touchstart',play,{once:true});
+  const btn=document.createElement('button'); btn.textContent='🔇';
+  Object.assign(btn.style,{position:'fixed',right:'10px',bottom:'10px',zIndex:'99999',background:'rgba(0,0,0,0.6)',color:'#00ff88',border:'1px solid rgba(0,255,136,0.35)',borderRadius:'8px',padding:'6px 8px',cursor:'pointer',fontFamily:'Consolas, monospace'});
+  btn.onclick=()=>{a.muted=!a.muted; if(!a.muted && a.paused){a.play().catch(()=>{});} btn.textContent=a.muted?'🔇':'🔊';};
   document.body.appendChild(btn);
 })();
