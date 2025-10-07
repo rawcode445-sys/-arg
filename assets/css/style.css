@@ -1,23 +1,27 @@
 
 :root{--green:#00ff88;--fg:#eaeaea;--red:#ff3355}
 html,body{margin:0;padding:0;background:transparent;color:var(--fg);font-family:Consolas,Menlo,monospace}
+
+/* Ensure site content always renders ABOVE the canvas background */
+.wrapper, .term, header, main, footer { position: relative; z-index: 1; }
+
 .wrapper{max-width:960px;margin:26px auto;padding:0 12px}
 .term{
-  border:1px solid rgba(0,255,136,.20);
-  background:rgba(0,0,0,.55);   /* <= blocks visible again */
+  border:1px solid rgba(0,255,136,.22);
+  background:rgba(0,0,0,.65);   /* readable panels */
   backdrop-filter: blur(1.5px);
   padding:16px;border-radius:10px;
-  box-shadow:0 8px 28px rgba(0,0,0,.45);
+  box-shadow:0 8px 28px rgba(0,0,0,.45)
 }
 h1,h2{letter-spacing:.08em;text-shadow:0 0 8px rgba(0,255,136,.22)}
 .btn{
   display:inline-block;padding:10px 14px;border:1px solid var(--red);
-  text-decoration:none;color:var(--fg);background:rgba(0,0,0,.40);  /* buttons readable */
+  text-decoration:none;color:var(--fg);background:rgba(0,0,0,.50);
   cursor:pointer;border-radius:8px
 }
 .btn:hover{filter:brightness(115%)}
 input{
-  background:rgba(0,0,0,.45);
+  background:rgba(0,0,0,.55);
   color:#dfffe6;border:1px solid rgba(0,255,136,.24);
   padding:10px;width:100%;border-radius:8px
 }
@@ -25,7 +29,7 @@ input{
 .err{color:#ff5577;display:none}
 .center{text-align:center}
 
-/* Gate 4 masks kept strong */
+/* Gate4 masks stay strong */
 .poster{position:relative;width:92%;max-width:900px;margin:20px auto}
 .poster img{width:100%;display:block;border:1px solid rgba(255,255,255,.06);border-radius:6px}
 .poster .mask{ filter: blur(45px) brightness(120%) contrast(110%); }
