@@ -2,6 +2,50 @@
 <html lang="fr"><head>
 <meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
 <title>Gate 2 — SIGNAL</title>
-<link rel="stylesheet" href="../../assets/css/style.css?v=raw2">
+<link rel="stylesheet" href="../../assets/css/style.css?v=matrix">
 </head>
-<body></body></html>
+<body>
+<div class="wrapper">
+  <div class="term">
+    <h2 class="title">GATE 2 — SIGNAL</h2>
+    <p class="center">Stabilise le flux : déchiffre le code, révèle le visuel, puis déverrouille la newsletter.</p>
+
+    <div style="text-align:center;margin:10px 0">
+      <img id="snap" src="../../assets/img/gate2_glitch.png" style="max-width:560px;width:100%" class="blurbox" alt="glitch tee">
+    </div>
+
+    <div class="row">
+      <input id="r1" placeholder="18-1-23">
+      <button class="btn" id="b1">Valider</button>
+    </div>
+    <p id="e1" class="err">Indice : 18 = R, 1 = A, 23 = ?</p>
+
+    <div id="step2" style="display:none;margin-top:12px">
+      <p class="center">Visuel révélé. Dernier accès requis :</p>
+
+      <div class="row">
+        <input id="r2a" placeholder="Complete the code → RAW//____">
+        <button class="btn" id="b2a">Valider</button>
+      </div>
+      <p id="e2a" class="err">Réponse attendue : 4 lettres.</p>
+
+      <div class="row">
+        <input id="r2b" placeholder="system log: 2+0+2+5 = __">
+        <button class="btn" id="b2b">Valider</button>
+      </div>
+      <p id="e2b" class="err">Essaie encore.</p>
+
+      <p id="nl" style="display:none" class="center">
+        <a class="btn" href="https://forms.gle/s9X6GMa8PPNp8ZHK7" target="_blank" rel="noopener">ACCESS // NEWSLETTER</a>
+      </p>
+    </div>
+  </div>
+</div>
+<script>
+let step1ok=false, step2aok=false, step2bok=false;
+b1.onclick=()=>{const v=r1.value.trim().toUpperCase(); if(v==='RAW'){ step1ok=true; snap.classList.add('show'); e1.style.display='none'; step2.style.display='block'; } else { e1.style.display='block'; }};
+b2a.onclick=()=>{const v=r2a.value.trim().toUpperCase(); if(v==='CODE'){ step2aok=true; e2a.style.display='none'; } else { e2a.style.display='block'; } nl.style.display=(step2aok&&step2bok)?'block':'none';};
+b2b.onclick=()=>{const v=r2b.value.trim(); if(v==='9'){ step2bok=true; e2b.style.display='none'; } else { e2b.style.display='block'; } nl.style.display=(step2aok&&step2bok)?'block':'none';};
+</script>
+<script src="../../assets/js/matrix.js" defer></script>
+</body></html>

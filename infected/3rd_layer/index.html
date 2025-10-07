@@ -2,6 +2,38 @@
 <html lang="fr"><head>
 <meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
 <title>Gate 3 — ACCESS</title>
-<link rel="stylesheet" href="../../assets/css/style.css?v=raw2">
+<link rel="stylesheet" href="../../assets/css/style.css?v=matrix">
+<style>.center{text-align:center}.count{font-size:1.1rem;margin-top:8px}</style>
 </head>
-<body></body></html>
+<body>
+<div class="wrapper">
+  <div class="term">
+    <h2 class="title">GATE 3 — FINAL KEY</h2>
+    <p class="center">Accès libre — entre la final key pour révéler les coordonnées et le RSVP.</p>
+    <p class="center"><strong>Date :</strong> 27.11.2025 — 20:00</p>
+    <p class="center count">Reveal in: <span id="cd">--</span></p>
+
+    <div class="row">
+      <input id="k" placeholder="enter final key"><button class="btn" id="go">UNLOCK</button>
+    </div>
+    <p id="e" class="err center">Wrong key.</p>
+
+    <div id="payload" style="margin-top:12px">
+      <h3 class="center">ACCESS CONTROLLED DATA</h3>
+      <p id="info" class="center">Coordinates are locked. Enter the final key to reveal.</p>
+      <p id="coords" class="center" style="display:none"><strong>GPS:</strong> 47°20'05.3&quot;N 7°17'28.3&quot;E</p>
+      <p id="rsvp" class="center" style="display:none">
+        <a class="btn" href="https://forms.gle/s9X6GMa8PPNp8ZHK7" target="_blank" rel="noopener">RSVP // NEWSLETTER</a>
+      </p>
+    </div>
+  </div>
+</div>
+<script>
+const CORRECT='SUPREMACY';
+go.onclick=()=>{ const v=k.value.trim().toUpperCase(); if(v===CORRECT){ e.style.display='none'; coords.style.display='block'; rsvp.style.display='block'; info.textContent='ACCESS GRANTED // COORDINATES REVEALED'; } else { e.style.display='block'; } };
+const target = new Date('2025-11-27T19:00:00Z').getTime();
+function tick(){ const now=Date.now(); let d=Math.max(0,target-now); const s=Math.floor(d/1000)%60; const m=Math.floor(d/60000)%60; const h=Math.floor(d/3600000)%24; const D=Math.floor(d/86400000); const pad=n=>String(n).padStart(2,'0'); cd.textContent=`${D}d ${pad(h)}h ${pad(m)}m ${pad(s)}s`; requestAnimationFrame(tick); }
+tick();
+</script>
+<script src="../../assets/js/matrix.js" defer></script>
+</body></html>
