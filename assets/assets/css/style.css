@@ -1,0 +1,3 @@
+
+/* Ensure page uses transparent backgrounds so canvas shows, but blocks keep their own bg */
+html,body{background:transparent;}
