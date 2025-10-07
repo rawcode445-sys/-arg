@@ -1,0 +1,86 @@
+<!doctype html>
+<html lang="en"><head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>THE FIRST IMPACT OF RAW//CODE</title>
+<link rel="stylesheet" href="../../assets/css/style.css">
+<style>
+/* Local tweaks ONLY for Gate 4 */
+/* stronger blur so it's impossible to guess */
+.poster .mask{ filter: blur(45px) brightness(120%) contrast(110%) !important; box-shadow:0 0 32px rgba(0,0,0,.8) }
+.questions .qrow{ display:flex; gap:8px; justify-content:center; align-items:center; margin:10px auto; width:100% }
+.questions input{ width:72% !important; min-width:320px; max-width:900px; padding:10px 12px; }
+.questions button{ padding:10px 14px }
+.flash{position:absolute;inset:0;background:rgba(255,255,255,0.06);pointer-events:none;opacity:0;transition:opacity .25s ease}
+.flash.on{opacity:1;transition:opacity .15s ease}
+</style>
+</head>
+<body>
+<div class="wrapper">
+  <div class="term">
+    <h2 class="title">THE FIRST IMPACT OF RAW//CODE</h2>
+    <p class="center">27 NOVEMBRE 2025 — 20h</p>
+
+    <div class="poster" id="posterWrap">
+      <img id="poster" src="../../assets/img/poster-final.jpg" alt="poster">
+      <!-- masks (data-rect = x,y,w,h in %) -->
+      <div class="mask" id="m1" data-rect="66,38,34,9"></div>
+      <div class="mask" id="m2" data-rect="13,52,30,11.5"></div>
+      <div class="mask" id="m3" data-rect="52,63,34,11"></div>
+      <div class="mask" id="m4" data-rect="9,72,44,11.5"></div>
+      <div class="mask" id="m5" data-rect="53,78,36,11"></div>
+      <div class="flash" id="flash"></div>
+    </div>
+
+    <div class="questions">
+      <div class="qrow"><input id="q1" placeholder="Q1: RAW is a subgenre of ____ ?"><button id="b1">UNLOCK</button></div>
+      <div class="qrow"><input id="q2" placeholder="Q2: Complete: RAW = distorted ____"><button id="b2">UNLOCK</button></div>
+      <div class="qrow"><input id="q3" placeholder="Q3: BUILT ON BASS. FORGED IN ____."><button id="b3">UNLOCK</button></div>
+      <div class="qrow"><input id="q4" placeholder="Q4: How many slashes in RAW//CODE ?"><button id="b4">UNLOCK</button></div>
+      <div class="qrow"><input id="q5" placeholder="Q5: Ending style after RAW = ____"><button id="b5">UNLOCK</button></div>
+    </div>
+  </div>
+</div>
+
+<script>
+function positionMasks(){
+  const img=document.getElementById('poster');
+  const rect=img.getBoundingClientRect();
+  document.querySelectorAll('.mask').forEach(el=>{
+    const [x,y,w,h]=el.dataset.rect.split(',').map(parseFloat);
+    const left=(x/100)*rect.width, top=(y/100)*rect.height;
+    const width=(w/100)*rect.width, height=(h/100)*rect.height;
+    Object.assign(el.style,{
+      left:left+'px', top:top+'px', width:width+'px', height:height+'px',
+      backgroundSize: rect.width+'px '+rect.height+'px',
+      backgroundPosition: '-'+left+'px -'+top+'px'
+    });
+  });
+}
+addEventListener('load', positionMasks);
+addEventListener('resize', positionMasks);
+
+function playSound(){ const a=new Audio('../../assets/sfx/glitch.wav'); a.volume=0.75; a.play().catch(()=>{}); }
+function flashOnce(){ const f=document.getElementById('flash'); f.classList.add('on'); setTimeout(()=>f.classList.remove('on'),160); }
+
+function unlock(maskId,inputId,answers){
+  const val=document.getElementById(inputId).value.trim().toUpperCase();
+  const mask=document.getElementById(maskId);
+  if(answers.includes(val)){
+    if(!mask.classList.contains('revealed')){
+      mask.classList.add('revealed');
+      playSound();
+      flashOnce();
+    }
+  }
+}
+b1.onclick=()=>unlock('m1','q1',['HARDSTYLE']);
+b2.onclick=()=>unlock('m2','q2',['KICKS']);
+b3.onclick=()=>unlock('m3','q3',['FIRE']);
+b4.onclick=()=>unlock('m4','q4',['2']);
+b5.onclick=()=>unlock('m5','q5',['UPTEMPO']);
+
+// debug rectangles
+if(new URL(location.href).searchParams.get('debug')==='1'){ document.querySelectorAll('.mask').forEach(m=>m.classList.add('debug')); }
+</script>
+</body></html>
