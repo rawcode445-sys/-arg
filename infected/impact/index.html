@@ -2,32 +2,31 @@
 <html lang="en">
 <head>
 <meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
-<title>THE FIRST IMPACT OF RAW//CODE — Gate 4 (BLACKOUT + GREEN FLASH)</title>
+<title>THE FIRST IMPACT OF RAW//CODE — Gate 4 (BLACKOUT MAX)</title>
 <link rel="stylesheet" href="../../assets/css/style.css?v=bgfix9">
 <style>
-/* Gate 4 — BLACKOUT masks: artists 100% illisibles avant reveal */
+/* Gate 4 — BLACKOUT MAX: artists totally hidden until reveal */
 .poster{position:relative;width:92%;max-width:900px;margin:20px auto}
 .poster img{width:100%;display:block;border:1px solid rgba(255,255,255,.06);border-radius:6px}
 
-/* Masques ultra-forts */
+/* Ultra blackout masks */
 .poster .mask{
   position:absolute; z-index:3;
-  background: rgba(0,0,0,.68); /* voile sombre puissant */
-  backdrop-filter: blur(60px) saturate(130%) contrast(180%) brightness(72%);
-  -webkit-backdrop-filter: blur(60px) saturate(130%) contrast(180%) brightness(72%);
-  transition: opacity .7s ease, backdrop-filter .7s ease, -webkit-backdrop-filter .7s ease;
+  background: rgba(0,0,0,.80); /* very dark veil */
+  backdrop-filter: blur(75px) saturate(130%) contrast(190%) brightness(68%);
+  -webkit-backdrop-filter: blur(75px) saturate(130%) contrast(190%) brightness(68%);
+  transition: opacity .8s ease, backdrop-filter .8s ease, -webkit-backdrop-filter .8s ease;
   border-radius: 14px;
-  /* halo extérieur + noir interne pour supprimer toute lisibilité */
   box-shadow:
-    0 14px 70px rgba(0,0,0,.98),
-    0 0 190px rgba(0,0,0,.92) inset,
-    0 0 60px rgba(0,0,0,.85);
+    0 18px 90px rgba(0,0,0,1),
+    0 0 240px rgba(0,0,0,.98) inset,
+    0 0 120px rgba(0,0,0,.95);
   opacity: 1; display:block;
 }
 .poster .mask::after{
   content:""; position:absolute; inset:0; border-radius:inherit; pointer-events:none;
   background: radial-gradient(ellipse at center,
-               rgba(0,0,0,.65), rgba(0,0,0,.82) 56%, rgba(0,0,0,.92) 100%);
+               rgba(0,0,0,.72), rgba(0,0,0,.86) 56%, rgba(0,0,0,.96) 100%);
 }
 .poster .mask.revealed{
   opacity:0;
@@ -40,10 +39,10 @@
 .questions input{width:72%;min-width:320px;max-width:900px;padding:10px 12px;border-radius:8px;border:1px solid rgba(0,255,136,0.22);background:rgba(0,0,0,.5);color:#dfffe6}
 .questions button{padding:10px 14px;border-radius:8px;border:none;background:#00ff88;color:#001;cursor:pointer}
 
-/* GREEN FLASH effect */
+/* green flash */
 .flash{position:absolute;inset:0;
-  background: radial-gradient(circle at center, rgba(0,255,136,0.35), rgba(0,255,136,0.08) 40%, rgba(0,255,136,0) 70%);
-  box-shadow: 0 0 80px rgba(0,255,136,0.35) inset, 0 0 180px rgba(0,255,136,0.25);
+  background: radial-gradient(circle at center, rgba(0,255,136,0.28), rgba(0,255,136,0.06) 40%, rgba(0,255,136,0) 70%);
+  box-shadow: 0 0 120px rgba(0,255,136,0.32) inset, 0 0 260px rgba(0,255,136,0.22);
   pointer-events:none; opacity:0; transition:opacity .28s ease}
 .flash.on{opacity:1}
 
@@ -58,7 +57,7 @@
 
     <div class="poster" id="posterWrap">
       <img id="poster" src="../../assets/img/poster-final.jpg" alt="poster">
-      <!-- masks (x,y,w,h en %) — mêmes positions -->
+      <!-- masks (x,y,w,h in %) — positions kept as requested -->
       <div class="mask" id="m1" data-rect="66,38,34,9"></div>
       <div class="mask" id="m2" data-rect="13,52,30,11.5"></div>
       <div class="mask" id="m3" data-rect="52,63,34,11"></div>
@@ -78,7 +77,7 @@
 </div>
 
 <script>
-// Position: en % du poster
+// Position masks relative to poster element
 function positionMasks(){
   const img = document.getElementById('poster');
   const rect = img.getBoundingClientRect();
@@ -95,16 +94,16 @@ function positionMasks(){
 window.addEventListener('load', positionMasks);
 window.addEventListener('resize', positionMasks);
 
-// Effets
-function playSound(){ const a=new Audio('../../assets/sfx/glitch.wav'); a.volume=0.7; a.play().catch(()=>{}); }
-function flashOnce(){ const f=document.getElementById('flash'); f.classList.add('on'); setTimeout(()=>f.classList.remove('on'), 180); }
+// Effects
+function playSound(){ const a=new Audio('../../assets/sfx/glitch.wav'); a.volume=0.8; a.play().catch(()=>{}); }
+function flashOnce(){ const f=document.getElementById('flash'); f.classList.add('on'); setTimeout(()=>f.classList.remove('on'), 200); }
 
-// Déverrouillage
+// Unlock helper
 function unlock(id, inputId, answers){
-  const val=document.getElementById(inputId).value.trim().toUpperCase();
-  const m=document.getElementById(id);
-  if(answers.includes(val) && !m.classList.contains('revealed')){
-    m.classList.add('revealed'); playSound(); flashOnce();
+  const val = document.getElementById(inputId).value.trim().toUpperCase();
+  const mask = document.getElementById(id);
+  if(answers.includes(val) && !mask.classList.contains('revealed')){
+    mask.classList.add('revealed'); playSound(); flashOnce();
   }
 }
 b1.onclick=()=>unlock('m1','q1',['HARDSTYLE']);
@@ -113,13 +112,13 @@ b3.onclick=()=>unlock('m3','q3',['FIRE']);
 b4.onclick=()=>unlock('m4','q4',['2']);
 b5.onclick=()=>unlock('m5','q5',['UPTEMPO']);
 
-// Debug : ?debug=1 pour voir les cadres
+// debug outlines with ?debug=1
 if(new URL(location.href).searchParams.get('debug')==='1'){
   document.querySelectorAll('.mask').forEach(m=>m.style.outline='2px dashed rgba(0,255,136,.6)');
 }
 </script>
 
-<!-- Matrix rain background -->
+<!-- Matrix background -->
 <script src="../../assets/js/matrix.js?v=bgfix9" defer></script>
 </body>
 </html>
