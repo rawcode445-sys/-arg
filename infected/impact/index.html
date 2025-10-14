@@ -2,31 +2,32 @@
 <html lang="en">
 <head>
 <meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
-<title>THE FIRST IMPACT OF RAW//CODE — Gate 4 (BLACKOUT MAX)</title>
+<title>THE FIRST IMPACT OF RAW//CODE — Gate 4 (BLACKOUT ULTRA)</title>
 <link rel="stylesheet" href="../../assets/css/style.css?v=bgfix9">
 <style>
-/* Gate 4 — BLACKOUT MAX: artists totally hidden until reveal */
+/* Gate 4 — BLACKOUT ULTRA: indistinguishable before reveal */
 .poster{position:relative;width:92%;max-width:900px;margin:20px auto}
 .poster img{width:100%;display:block;border:1px solid rgba(255,255,255,.06);border-radius:6px}
 
-/* Ultra blackout masks */
+/* Ultra+ blackout masks */
 .poster .mask{
   position:absolute; z-index:3;
-  background: rgba(0,0,0,.80); /* very dark veil */
-  backdrop-filter: blur(75px) saturate(130%) contrast(190%) brightness(68%);
-  -webkit-backdrop-filter: blur(75px) saturate(130%) contrast(190%) brightness(68%);
-  transition: opacity .8s ease, backdrop-filter .8s ease, -webkit-backdrop-filter .8s ease;
-  border-radius: 14px;
+  background: rgba(0,0,0,.82); /* deeper veil */
+  backdrop-filter: blur(95px) saturate(125%) contrast(200%) brightness(60%);
+  -webkit-backdrop-filter: blur(95px) saturate(125%) contrast(200%) brightness(60%);
+  transition: opacity .85s ease, backdrop-filter .85s ease, -webkit-backdrop-filter .85s ease;
+  border-radius: 16px;
   box-shadow:
-    0 18px 90px rgba(0,0,0,1),
-    0 0 240px rgba(0,0,0,.98) inset,
-    0 0 120px rgba(0,0,0,.95);
+    0 22px 120px rgba(0,0,0,1),
+    0 0 280px rgba(0,0,0,.98) inset,
+    0 0 160px rgba(0,0,0,.97);
   opacity: 1; display:block;
 }
+/* extra inner fog */
 .poster .mask::after{
   content:""; position:absolute; inset:0; border-radius:inherit; pointer-events:none;
   background: radial-gradient(ellipse at center,
-               rgba(0,0,0,.72), rgba(0,0,0,.86) 56%, rgba(0,0,0,.96) 100%);
+               rgba(0,0,0,.76), rgba(0,0,0,.9) 54%, rgba(0,0,0,.98) 100%);
 }
 .poster .mask.revealed{
   opacity:0;
@@ -41,8 +42,8 @@
 
 /* green flash */
 .flash{position:absolute;inset:0;
-  background: radial-gradient(circle at center, rgba(0,255,136,0.28), rgba(0,255,136,0.06) 40%, rgba(0,255,136,0) 70%);
-  box-shadow: 0 0 120px rgba(0,255,136,0.32) inset, 0 0 260px rgba(0,255,136,0.22);
+  background: radial-gradient(circle at center, rgba(0,255,136,0.26), rgba(0,255,136,0.06) 40%, rgba(0,255,136,0) 70%);
+  box-shadow: 0 0 140px rgba(0,255,136,0.28) inset, 0 0 300px rgba(0,255,136,0.20);
   pointer-events:none; opacity:0; transition:opacity .28s ease}
 .flash.on{opacity:1}
 
@@ -57,7 +58,7 @@
 
     <div class="poster" id="posterWrap">
       <img id="poster" src="../../assets/img/poster-final.jpg" alt="poster">
-      <!-- masks (x,y,w,h in %) — positions kept as requested -->
+      <!-- masks (x,y,w,h in %) — same positions -->
       <div class="mask" id="m1" data-rect="66,38,34,9"></div>
       <div class="mask" id="m2" data-rect="13,52,30,11.5"></div>
       <div class="mask" id="m3" data-rect="52,63,34,11"></div>
@@ -77,7 +78,7 @@
 </div>
 
 <script>
-// Position masks relative to poster element
+// Position masks relative to poster
 function positionMasks(){
   const img = document.getElementById('poster');
   const rect = img.getBoundingClientRect();
@@ -100,8 +101,8 @@ function flashOnce(){ const f=document.getElementById('flash'); f.classList.add(
 
 // Unlock helper
 function unlock(id, inputId, answers){
-  const val = document.getElementById(inputId).value.trim().toUpperCase();
-  const mask = document.getElementById(id);
+  const val=document.getElementById(inputId).value.trim().toUpperCase();
+  const mask=document.getElementById(id);
   if(answers.includes(val) && !mask.classList.contains('revealed')){
     mask.classList.add('revealed'); playSound(); flashOnce();
   }
@@ -112,7 +113,6 @@ b3.onclick=()=>unlock('m3','q3',['FIRE']);
 b4.onclick=()=>unlock('m4','q4',['2']);
 b5.onclick=()=>unlock('m5','q5',['UPTEMPO']);
 
-// debug outlines with ?debug=1
 if(new URL(location.href).searchParams.get('debug')==='1'){
   document.querySelectorAll('.mask').forEach(m=>m.style.outline='2px dashed rgba(0,255,136,.6)');
 }
