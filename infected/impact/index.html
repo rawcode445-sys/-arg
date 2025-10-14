@@ -2,39 +2,39 @@
 <html lang="en">
 <head>
 <meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
-<title>THE FIRST IMPACT OF RAW//CODE</title>
+<title>THE FIRST IMPACT OF RAW//CODE — Gate 4 (Backdrop Blur Fix)</title>
 <link rel="stylesheet" href="../../assets/css/style.css?v=bgfix9">
 <style>
-/* Gate 4 — masks très opaques + transition douce */
+/* Gate 4 — BACKDROP BLUR masks (no background-image, blurs what's behind) */
 .poster{position:relative;width:92%;max-width:900px;margin:20px auto}
 .poster img{width:100%;display:block;border:1px solid rgba(255,255,255,.06);border-radius:6px}
 
-/* Masques : blur fort + assombrissement + brume interne */
+/* Backdrop-based blur */
 .poster .mask{
   position:absolute; z-index:3;
-  filter: blur(86px) brightness(70%) contrast(150%) saturate(120%);
-  transition: filter .6s ease, opacity .6s ease;
-  pointer-events:none; border-radius:8px;
-  background-repeat:no-repeat;
-  background-color: rgba(0,0,0,.42);
-  box-shadow: 0 0 56px rgba(0,0,0,.95), 0 0 120px rgba(0,0,0,.8) inset;
+  background: rgba(0,0,0,.35);             /* semi-transparent so backdrop-filter applies */
+  backdrop-filter: blur(26px) saturate(120%) contrast(140%) brightness(85%);
+  -webkit-backdrop-filter: blur(26px) saturate(120%) contrast(140%) brightness(85%);
+  transition: opacity .6s ease, backdrop-filter .6s ease, -webkit-backdrop-filter .6s ease;
+  border-radius: 10px;
+  box-shadow: 0 6px 42px rgba(0,0,0,.85);
   opacity: 1; display:block;
 }
+/* extra dark edge to avoid bleed */
 .poster .mask::after{
-  content:""; position:absolute; inset:0; border-radius:inherit;
-  background: radial-gradient(ellipse at center,
-               rgba(0,0,0,.55), rgba(0,0,0,.7) 58%, rgba(0,0,0,.82) 100%);
+  content:""; position:absolute; inset:0; border-radius:inherit; pointer-events:none;
+  background: radial-gradient(ellipse at center, rgba(0,0,0,.25), rgba(0,0,0,.55) 60%, rgba(0,0,0,.75) 100%);
 }
 .poster .mask.revealed{
   opacity:0;
-  filter: blur(0) brightness(100%) contrast(100%) saturate(100%);
+  backdrop-filter: blur(0) saturate(100%) contrast(100%) brightness(100%);
+  -webkit-backdrop-filter: blur(0) saturate(100%) contrast(100%) brightness(100%);
 }
 
 .questions{display:flex;flex-direction:column;gap:12px;align-items:center;margin-top:18px}
 .questions .qrow{width:100%;display:flex;gap:8px;justify-content:center;align-items:center}
 .questions input{width:72%;min-width:320px;max-width:900px;padding:10px 12px;border-radius:8px;border:1px solid rgba(0,255,136,0.22);background:rgba(0,0,0,.5);color:#dfffe6}
 .questions button{padding:10px 14px;border-radius:8px;border:none;background:#00ff88;color:#001;cursor:pointer}
-
 .flash{position:absolute;inset:0;background:rgba(255,255,255,0.08);pointer-events:none;opacity:0;transition:opacity .25s ease}
 .flash.on{opacity:1}
 .center{text-align:center}
@@ -48,7 +48,7 @@
 
     <div class="poster" id="posterWrap">
       <img id="poster" src="../../assets/img/poster-final.jpg" alt="poster">
-      <!-- masks (x,y,w,h en %) -->
+      <!-- masks (x,y,w,h in %) -->
       <div class="mask" id="m1" data-rect="66,38,34,9"></div>
       <div class="mask" id="m2" data-rect="13,52,30,11.5"></div>
       <div class="mask" id="m3" data-rect="52,63,34,11"></div>
@@ -68,7 +68,7 @@
 </div>
 
 <script>
-// Positionne les masques et utilise poster.src comme texture (robuste aux chemins)
+// Position masks in poster coordinates
 function positionMasks(){
   const img = document.getElementById('poster');
   const rect = img.getBoundingClientRect();
@@ -78,30 +78,24 @@ function positionMasks(){
     const top = (y/100)*rect.height;
     const width = (w/100)*rect.width;
     const height = (h/100)*rect.height;
-    el.style.backgroundImage = `url(${img.src})`;
     Object.assign(el.style, {
-      left: left + 'px', top: top + 'px', width: width + 'px', height: height + 'px',
-      backgroundSize: rect.width + 'px ' + rect.height + 'px',
-      backgroundPosition: '-' + left + 'px -' + top + 'px',
-      display: 'block', opacity: '1'
+      left: left + 'px', top: top + 'px', width: width + 'px', height: height + 'px'
     });
   });
 }
-addEventListener('load', positionMasks);
-addEventListener('resize', positionMasks);
+window.addEventListener('load', positionMasks);
+window.addEventListener('resize', positionMasks);
 
-// Effets
+// Sound + flash on reveal
 function playSound(){ const a=new Audio('../../assets/sfx/glitch.wav'); a.volume=0.7; a.play().catch(()=>{}); }
 function flashOnce(){ const f=document.getElementById('flash'); f.classList.add('on'); setTimeout(()=>f.classList.remove('on'), 160); }
 
-// Unlock helper
-function unlock(maskId, inputId, answers){
+// Reveal helper
+function unlock(id, inputId, answers){
   const val=document.getElementById(inputId).value.trim().toUpperCase();
-  const mask=document.getElementById(maskId);
-  if(answers.includes(val)){
-    if(!mask.classList.contains('revealed')){
-      mask.classList.add('revealed'); playSound(); flashOnce();
-    }
+  const m=document.getElementById(id);
+  if(answers.includes(val) && !m.classList.contains('revealed')){
+    m.classList.add('revealed'); playSound(); flashOnce();
   }
 }
 b1.onclick=()=>unlock('m1','q1',['HARDSTYLE']);
@@ -110,13 +104,13 @@ b3.onclick=()=>unlock('m3','q3',['FIRE']);
 b4.onclick=()=>unlock('m4','q4',['2']);
 b5.onclick=()=>unlock('m5','q5',['UPTEMPO']);
 
-// Debug pour vérifier les zones : ?debug=1
+// Debug outlines with ?debug=1
 if(new URL(location.href).searchParams.get('debug')==='1'){
   document.querySelectorAll('.mask').forEach(m=>m.style.outline='2px dashed rgba(255,0,0,.6)');
 }
 </script>
 
-<!-- Matrix rain (background only) -->
+<!-- Matrix rain background -->
 <script src="../../assets/js/matrix.js?v=bgfix9" defer></script>
 </body>
 </html>
