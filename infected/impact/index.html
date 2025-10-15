@@ -3,49 +3,55 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
-<title>THE FIRST IMPACT OF RAW//CODE — Gate 4 (Blackout Absolu Overlays)</title>
-<link rel="stylesheet" href="../../assets/css/style.css?v=force1">
+<title>THE FIRST IMPACT OF RAW//CODE — Gate 4 (Overlays bords flouttés)</title>
+<link rel="stylesheet" href="../../assets/css/style.css?v=softedge1">
 <style>
-  /* Layout minimal */
   body{background:#000;color:#dfffe6;font-family:Inter,system-ui,Arial;margin:0}
   .wrapper{padding:18px}
   .title{color:#00ff88;text-transform:uppercase;letter-spacing:1px}
   .poster{position:relative;width:92%;max-width:980px;margin:18px auto}
-  .poster img{width:100%;display:block;border-radius:6px}
+  .poster img{width:100%;display:block;border-radius:6px;border:1px solid rgba(255,255,255,.06)}
 
-  /* Overlays version “bords flouttés” */
-.overlay {
-  position: absolute;
-  z-index: 9999;
-  pointer-events: none;
-  /* centre noir + bord flou */
-  background: radial-gradient(circle at center,
-    rgba(0,0,0,0.98) 40%, 
-    rgba(0,0,0,0.9) 60%, 
-    rgba(0,0,0,0.6) 75%, 
-    rgba(0,0,0,0.3) 85%, 
-    rgba(0,0,0,0) 100%);
-  filter: blur(30px);
-  border-radius: 30px;
-  opacity: 1;
-  transition: opacity 0.9s ease, filter 0.8s ease;
-}
-.overlay.revealed {
-  opacity: 0;
-  filter: blur(0px);
-}
+  /* Overlay (centre opaque, bords flouttés/atténués) */
+  .overlay{
+    position:absolute;
+    z-index:9999;
+    pointer-events:none;
+    border-radius:10px;
+    opacity:1;
+    transform:scale(1);
+    transition:opacity .8s ease, transform .5s ease, filter .5s ease;
+    /* centre opaque + bord doux (radial gradient) */
+    background:
+      radial-gradient(circle at center,
+        rgba(0,0,0,0.98) 0%,
+        rgba(0,0,0,0.98) 58%,
+        rgba(0,0,0,0.92) 72%,
+        rgba(0,0,0,0.82) 84%,
+        rgba(0,0,0,0.0) 100%);
+    /* halo interne léger pour éviter les franges de texte */
+    box-shadow:
+      0 0 180px rgba(0,0,0,0.95) inset,
+      0 0 220px rgba(0,255,136,0.05);
+    /* flou sur les bords pour fondre dans le poster */
+    filter: blur(6px);
+  }
+  .overlay.revealed{
+    opacity:0;
+    transform:scale(1.02);
+    filter:blur(0);
+  }
 
-  /* Input UI */
   .questions{display:flex;flex-direction:column;gap:12px;align-items:center;margin-top:18px}
   .qrow{width:100%;display:flex;gap:8px;justify-content:center;align-items:center}
   input{width:72%;min-width:320px;padding:10px 12px;border-radius:8px;border:1px solid rgba(0,255,136,.18);background:rgba(0,0,0,.5);color:#dfffe6}
   button{padding:10px 14px;border-radius:8px;border:none;background:#00ff88;color:#001;cursor:pointer}
 
-  /* Green flash */
   .flash{position:absolute;inset:0;pointer-events:none;opacity:0;transition:opacity .28s ease;
-    background: radial-gradient(circle at center, rgba(0,255,136,0.22), rgba(0,255,136,0.04) 35%, rgba(0,255,136,0) 60%);
+    background: radial-gradient(circle at center, rgba(0,255,136,0.22), rgba(0,255,136,0.05) 35%, rgba(0,255,136,0) 60%);
     z-index:10000}
   .flash.on{opacity:1}
+
   .footer-audio{text-align:center;margin:18px 0}
   .footer-audio a{display:inline-block;padding:8px 12px;border-radius:8px;border:1px solid rgba(0,255,136,.35);color:#dfffe6;background:rgba(0,0,0,.45);text-decoration:none}
 </style>
@@ -53,12 +59,11 @@
 <body>
 <div class="wrapper">
   <h1 class="title">THE FIRST IMPACT OF RAW//CODE</h1>
-  <p>27 NOVEMBRE 2025 — 20h — Courfaivre (coordonnées visibles après SUPREMACY)</p>
+  <p>27 NOVEMBRE 2025 — 20h — Courfaivre</p>
 
   <div class="poster" id="posterWrap">
     <img id="poster" src="../../assets/img/poster-final.jpg" alt="poster">
-    <!-- (les div.mask originaux ne sont plus nécessaires) -->
-    <!-- On conserve des éléments mask pour data, mais on va générer des overlays via JS -->
+    <!-- Zones sources (pour positions + réponses) -->
     <div class="mask" id="m1" data-rect="66,38,34,9" data-key="HARDSTYLE"></div>
     <div class="mask" id="m2" data-rect="13,52,30,11.5" data-key="KICKS"></div>
     <div class="mask" id="m3" data-rect="52,63,34,11" data-key="FIRE"></div>
@@ -76,118 +81,71 @@
   </div>
 
   <div class="footer-audio">
-    <a href="https://open.spotify.com/track/359u0bxaE927xVFHOfRip9?si=a60ad6904d2a4352" target="_blank" rel="noopener">▶ PLAY RAW — Spotify</a>
+    <a href="https://open.spotify.com/intl-fr/track/359u0bxaE927xVFHOfRip9?si=a60ad6904d2a4352" target="_blank" rel="noopener">
+      ▶ PLAY RAW — Spotify
+    </a>
   </div>
 </div>
 
 <script>
-/*
-  Script robuste :
-  - crée de vrais overlays opaques (pas de backdrop-filter)
-  - positionne en % par rapport à l'image
-  - gère le reveal sur bonnes réponses (data-key sur chaque mask)
-  - debug via ?debug=1 (outline)
-*/
+function parseRect(s){ return s.split(',').map(x=>parseFloat(x.trim())); }
 
-// helper : parse rect string "x,y,w,h" -> numbers
-function parseRect(s){
-  return s.split(',').map(x=>parseFloat(x.trim()));
-}
-
-// create overlays from .mask elements
 function createOverlays(){
   const poster = document.getElementById('poster');
   const rect = poster.getBoundingClientRect();
   const parent = document.getElementById('posterWrap');
+  parent.querySelectorAll('.overlay').forEach(o=>o.remove());
 
-  // remove any old overlays
-  parent.querySelectorAll('.overlay').forEach(o => o.remove());
-
-  // iterate masks (data-rect)
-  parent.querySelectorAll('.mask').forEach(mask => {
-    const d = mask.dataset.rect;
-    if(!d) return;
+  parent.querySelectorAll('.mask').forEach(mask=>{
+    const d = mask.dataset.rect; if(!d) return;
     const [x,y,w,h] = parseRect(d);
-    const left = (x/100)*rect.width;
-    const top  = (y/100)*rect.height;
-    const width = (w/100)*rect.width;
-    const height = (h/100)*rect.height;
-
     const o = document.createElement('div');
     o.className = 'overlay';
     o.id = 'ov_' + mask.id;
-    o.dataset.key = (mask.dataset.key || '').toUpperCase();
-    o.style.left = left + 'px';
-    o.style.top  = top  + 'px';
-    o.style.width = width + 'px';
-    o.style.height = height + 'px';
-    // attach to parent (above image)
+    o.dataset.key = (mask.dataset.key||'').toUpperCase();
+    o.style.left   = (x/100)*rect.width  + 'px';
+    o.style.top    = (y/100)*rect.height + 'px';
+    o.style.width  = (w/100)*rect.width  + 'px';
+    o.style.height = (h/100)*rect.height + 'px';
     parent.appendChild(o);
   });
 }
 
-// reposition overlays on resize/load
 function positionAndCreate(){
   const poster = document.getElementById('poster');
   if(!poster.complete){
-    // ensure image is loaded first
-    poster.addEventListener('load', ()=>{ createOverlays(); }, {once:true});
+    poster.addEventListener('load', ()=>createOverlays(), {once:true});
     return;
   }
   createOverlays();
 }
 
-// reveal helper
 function revealByKey(key){
   key = key.trim().toUpperCase();
   document.querySelectorAll('.overlay').forEach(o=>{
     if(o.dataset.key === key && !o.classList.contains('revealed')){
       o.classList.add('revealed');
-      // sound + flash
       try{ new Audio('../../assets/sfx/glitch.wav').play().catch(()=>{}); }catch(e){}
-      const f = document.getElementById('flash'); f.classList.add('on');
-      setTimeout(()=>f.classList.remove('on'), 380);
+      const f=document.getElementById('flash'); f.classList.add('on'); setTimeout(()=>f.classList.remove('on'), 360);
     }
   });
 }
 
-// wire up buttons
-function wireButtons(){
-  document.getElementById('b1').onclick = ()=>{ revealByKey( document.getElementById('q1').value ); };
-  document.getElementById('b2').onclick = ()=>{ revealByKey( document.getElementById('q2').value ); };
-  document.getElementById('b3').onclick = ()=>{ revealByKey( document.getElementById('q3').value ); };
-  document.getElementById('b4').onclick = ()=>{ revealByKey( document.getElementById('q4').value ); };
-  document.getElementById('b5').onclick = ()=>{ revealByKey( document.getElementById('q5').value ); };
-}
-
-// debug outlines via ?debug=1
-function debugOutline(){
-  if(new URL(location.href).searchParams.get('debug')==='1'){
-    document.querySelectorAll('.overlay').forEach(o=>{
-      o.style.outline = '2px dashed rgba(255,0,0,.8)';
-      o.style.background = 'rgba(0,0,0,0.98)';
-    });
-  }
-}
-
-// init
 window.addEventListener('load', ()=>{
   positionAndCreate();
-  wireButtons();
-  debugOutline();
+  document.getElementById('b1').onclick=()=>revealByKey(document.getElementById('q1').value);
+  document.getElementById('b2').onclick=()=>revealByKey(document.getElementById('q2').value);
+  document.getElementById('b3').onclick=()=>revealByKey(document.getElementById('q3').value);
+  document.getElementById('b4').onclick=()=>revealByKey(document.getElementById('q4').value);
+  document.getElementById('b5').onclick=()=>revealByKey(document.getElementById('q5').value);
+
+  if(new URL(location.href).searchParams.get('debug')==='1'){
+    document.querySelectorAll('.overlay').forEach(o=>o.style.outline='2px dashed rgba(0,255,136,.6)');
+  }
 });
-window.addEventListener('resize', ()=>{
-  // recreate overlays on resize so % mapping stays accurate
-  positionAndCreate();
-});
+window.addEventListener('resize', positionAndCreate);
 </script>
 
-<!-- Matrix rain background (keeps site look) -->
-<script src="../../assets/js/matrix.js?v=bgfix9" defer></script>
-</body>
-</html>
-
-<!-- Matrix (fond seulement) -->
-<script src="../../assets/js/matrix.js?v=bgfix9" defer></script>
+<script src="../../assets/js/matrix.js?v=softedge1" defer></script>
 </body>
 </html>
