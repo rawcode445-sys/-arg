@@ -2,32 +2,31 @@
 <html lang="en">
 <head>
 <meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
-<title>THE FIRST IMPACT OF RAW//CODE — Gate 4 (BLACKOUT ULTRA)</title>
+<title>THE FIRST IMPACT OF RAW//CODE — Gate 4 (BLACKOUT FINAL • Test lien Spotify)</title>
 <link rel="stylesheet" href="../../assets/css/style.css?v=bgfix9">
 <style>
-/* Gate 4 — BLACKOUT ULTRA: indistinguishable before reveal */
+/* Gate 4 — BLACKOUT FINAL: masques uniquement sur artistes, ultra-flou + sombre */
 .poster{position:relative;width:92%;max-width:900px;margin:20px auto}
 .poster img{width:100%;display:block;border:1px solid rgba(255,255,255,.06);border-radius:6px}
 
-/* Ultra+ blackout masks */
+/* Masques ULTRA: 180px blur, noir 0.95, brightness 35% */
 .poster .mask{
   position:absolute; z-index:3;
-  background: rgba(0,0,0,.82); /* deeper veil */
-  backdrop-filter: blur(95px) saturate(125%) contrast(200%) brightness(60%);
-  -webkit-backdrop-filter: blur(95px) saturate(125%) contrast(200%) brightness(60%);
-  transition: opacity .85s ease, backdrop-filter .85s ease, -webkit-backdrop-filter .85s ease;
+  background: rgba(0,0,0,.95);
+  backdrop-filter: blur(180px) saturate(125%) contrast(220%) brightness(35%);
+  -webkit-backdrop-filter: blur(180px) saturate(125%) contrast(220%) brightness(35%);
+  transition: opacity .8s ease, backdrop-filter .8s ease, -webkit-backdrop-filter .8s ease;
   border-radius: 16px;
   box-shadow:
-    0 22px 120px rgba(0,0,0,1),
-    0 0 280px rgba(0,0,0,.98) inset,
-    0 0 160px rgba(0,0,0,.97);
+    0 20px 140px rgba(0,0,0,1),
+    0 0 300px rgba(0,0,0,.98) inset,
+    0 0 160px rgba(0,0,0,.98);
   opacity: 1; display:block;
 }
-/* extra inner fog */
 .poster .mask::after{
   content:""; position:absolute; inset:0; border-radius:inherit; pointer-events:none;
   background: radial-gradient(ellipse at center,
-               rgba(0,0,0,.76), rgba(0,0,0,.9) 54%, rgba(0,0,0,.98) 100%);
+               rgba(0,0,0,.78), rgba(0,0,0,.92) 54%, rgba(0,0,0,1) 100%);
 }
 .poster .mask.revealed{
   opacity:0;
@@ -35,17 +34,28 @@
   -webkit-backdrop-filter: blur(0) saturate(100%) contrast(100%) brightness(100%);
 }
 
+/* Questions */
 .questions{display:flex;flex-direction:column;gap:12px;align-items:center;margin-top:18px}
 .questions .qrow{width:100%;display:flex;gap:8px;justify-content:center;align-items:center}
 .questions input{width:72%;min-width:320px;max-width:900px;padding:10px 12px;border-radius:8px;border:1px solid rgba(0,255,136,0.22);background:rgba(0,0,0,.5);color:#dfffe6}
 .questions button{padding:10px 14px;border-radius:8px;border:none;background:#00ff88;color:#001;cursor:pointer}
 
-/* green flash */
+/* Flash vert */
 .flash{position:absolute;inset:0;
-  background: radial-gradient(circle at center, rgba(0,255,136,0.26), rgba(0,255,136,0.06) 40%, rgba(0,255,136,0) 70%);
-  box-shadow: 0 0 140px rgba(0,255,136,0.28) inset, 0 0 300px rgba(0,255,136,0.20);
+  background: radial-gradient(circle at center, rgba(0,255,136,0.28), rgba(0,255,136,0.08) 40%, rgba(0,255,136,0) 70%);
+  box-shadow: 0 0 120px rgba(0,255,136,0.32) inset, 0 0 260px rgba(0,255,136,0.22);
   pointer-events:none; opacity:0; transition:opacity .28s ease}
 .flash.on{opacity:1}
+
+/* Lien Spotify en bas */
+.footer-audio{margin:22px 0 8px; text-align:center}
+.footer-audio a{
+  display:inline-block; padding:10px 14px; border-radius:8px;
+  border:1px solid rgba(0,255,136,.35);
+  color:#dfffe6; text-decoration:none; font-weight:600;
+  background:rgba(0,0,0,.45);
+}
+.footer-audio a:hover{filter:brightness(115%)}
 
 .center{text-align:center}
 </style>
@@ -58,7 +68,7 @@
 
     <div class="poster" id="posterWrap">
       <img id="poster" src="../../assets/img/poster-final.jpg" alt="poster">
-      <!-- masks (x,y,w,h in %) — same positions -->
+      <!-- Masques (x,y,w,h %) — positions inchangées -->
       <div class="mask" id="m1" data-rect="66,38,34,9"></div>
       <div class="mask" id="m2" data-rect="13,52,30,11.5"></div>
       <div class="mask" id="m3" data-rect="52,63,34,11"></div>
@@ -74,11 +84,17 @@
       <div class="qrow"><input id="q4" placeholder="Q4: How many slashes in RAW//CODE ?"><button id="b4">UNLOCK</button></div>
       <div class="qrow"><input id="q5" placeholder="Q5: Ending style after RAW = ____"><button id="b5">UNLOCK</button></div>
     </div>
+
+    <div class="footer-audio">
+      <a href="https://open.spotify.com/intl-fr/track/359u0bxaE927xVFHOfRip9?si=a60ad6904d2a4352" target="_blank" rel="noopener">
+        ▶ PLAY RAW — Spotify
+      </a>
+    </div>
   </div>
 </div>
 
 <script>
-// Position masks relative to poster
+// Position des masques en % du poster
 function positionMasks(){
   const img = document.getElementById('poster');
   const rect = img.getBoundingClientRect();
@@ -95,16 +111,16 @@ function positionMasks(){
 window.addEventListener('load', positionMasks);
 window.addEventListener('resize', positionMasks);
 
-// Effects
+// Effets
 function playSound(){ const a=new Audio('../../assets/sfx/glitch.wav'); a.volume=0.8; a.play().catch(()=>{}); }
 function flashOnce(){ const f=document.getElementById('flash'); f.classList.add('on'); setTimeout(()=>f.classList.remove('on'), 200); }
 
-// Unlock helper
+// Déverrouillage
 function unlock(id, inputId, answers){
   const val=document.getElementById(inputId).value.trim().toUpperCase();
-  const mask=document.getElementById(id);
-  if(answers.includes(val) && !mask.classList.contains('revealed')){
-    mask.classList.add('revealed'); playSound(); flashOnce();
+  const m=document.getElementById(id);
+  if(answers.includes(val) && !m.classList.contains('revealed')){
+    m.classList.add('revealed'); playSound(); flashOnce();
   }
 }
 b1.onclick=()=>unlock('m1','q1',['HARDSTYLE']);
@@ -113,12 +129,13 @@ b3.onclick=()=>unlock('m3','q3',['FIRE']);
 b4.onclick=()=>unlock('m4','q4',['2']);
 b5.onclick=()=>unlock('m5','q5',['UPTEMPO']);
 
+// Debug : ?debug=1
 if(new URL(location.href).searchParams.get('debug')==='1'){
   document.querySelectorAll('.mask').forEach(m=>m.style.outline='2px dashed rgba(0,255,136,.6)');
 }
 </script>
 
-<!-- Matrix background -->
+<!-- Matrix rain background -->
 <script src="../../assets/js/matrix.js?v=bgfix9" defer></script>
 </body>
 </html>
