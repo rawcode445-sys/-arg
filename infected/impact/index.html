@@ -13,21 +13,27 @@
   .poster{position:relative;width:92%;max-width:980px;margin:18px auto}
   .poster img{width:100%;display:block;border-radius:6px}
 
-  /* Overlay (OPAQUE) */
-  .overlay{
-    position:absolute;
-    background: rgba(0,0,0,0.99); /* quasi-black : garanti */
-    z-index:9999;                /* au dessus de tout */
-    border-radius:8px;
-    transition: opacity .8s ease, transform .5s ease;
-    opacity:1;
-    pointer-events:none;         /* laisse la page interactive */
-    box-shadow: 0 18px 120px rgba(0,0,0,1) inset;
-  }
-  .overlay.revealed{
-    opacity:0; transform:scale(1.01);
-    pointer-events:none;
-  }
+  /* Overlays version “bords flouttés” */
+.overlay {
+  position: absolute;
+  z-index: 9999;
+  pointer-events: none;
+  /* centre noir + bord flou */
+  background: radial-gradient(circle at center,
+    rgba(0,0,0,0.98) 40%, 
+    rgba(0,0,0,0.9) 60%, 
+    rgba(0,0,0,0.6) 75%, 
+    rgba(0,0,0,0.3) 85%, 
+    rgba(0,0,0,0) 100%);
+  filter: blur(30px);
+  border-radius: 30px;
+  opacity: 1;
+  transition: opacity 0.9s ease, filter 0.8s ease;
+}
+.overlay.revealed {
+  opacity: 0;
+  filter: blur(0px);
+}
 
   /* Input UI */
   .questions{display:flex;flex-direction:column;gap:12px;align-items:center;margin-top:18px}
