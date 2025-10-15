@@ -2,52 +2,56 @@
 <html lang="en">
 <head>
 <meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
-<title>THE FIRST IMPACT OF RAW//CODE — Gate 4 (BLACKOUT ABSOLU)</title>
+<title>THE FIRST IMPACT OF RAW//CODE — Gate 4 (BLACKOUT TERMINAL)</title>
 <link rel="stylesheet" href="../../assets/css/style.css?v=bgfix9">
 <style>
-/* Gate 4 — BLACKOUT ABSOLU: aucun détail lisible avant reveal */
+/* Gate 4 — BLACKOUT TERMINAL */
 .poster{position:relative;width:92%;max-width:900px;margin:20px auto}
 .poster img{width:100%;display:block;border:1px solid rgba(255,255,255,.06);border-radius:6px}
 
-/* Masques ABSOLU: blur 260px, noir .97, brightness 25%, contrast 250% */
+/* Masques: flou très fort + COUCHE NOIRE OPAQUE au-dessus (aucune fuite) */
 .poster .mask{
   position:absolute; z-index:3;
-  background: rgba(0,0,0,.97);
-  backdrop-filter: blur(260px) saturate(120%) contrast(250%) brightness(25%);
-  -webkit-backdrop-filter: blur(260px) saturate(120%) contrast(250%) brightness(25%);
+  backdrop-filter: blur(400px) contrast(300%) brightness(15%) saturate(120%);
+  -webkit-backdrop-filter: blur(400px) contrast(300%) brightness(15%) saturate(120%);
+  border-radius:16px;
+  opacity:1;
   transition: opacity .9s ease, backdrop-filter .9s ease, -webkit-backdrop-filter .9s ease;
-  border-radius: 18px;
+}
+.poster .mask::before{
+  content:"";
+  position:absolute; inset:0; border-radius:inherit; pointer-events:none;
+  background: rgba(0,0,0,0.99);
   box-shadow:
-    0 26px 180px rgba(0,0,0,1),
-    0 0 400px rgba(0,0,0,1) inset,
-    0 0 220px rgba(0,0,0,.99);
-  opacity: 1; display:block;
+    0 0 280px rgba(0,0,0,1) inset,
+    0 0 200px rgba(0,0,0,0.98),
+    0 24px 180px rgba(0,0,0,1);
 }
 .poster .mask::after{
   content:""; position:absolute; inset:0; border-radius:inherit; pointer-events:none;
   background: radial-gradient(ellipse at center,
-               rgba(0,0,0,.85), rgba(0,0,0,.95) 54%, rgba(0,0,0,1) 100%);
+    rgba(0,0,0,.85), rgba(0,0,0,.95) 55%, rgba(0,0,0,1) 100%);
 }
 .poster .mask.revealed{
   opacity:0;
-  backdrop-filter: blur(0) saturate(100%) contrast(100%) brightness(100%);
-  -webkit-backdrop-filter: blur(0) saturate(100%) contrast(100%) brightness(100%);
+  backdrop-filter: blur(0) contrast(100%) brightness(100%) saturate(100%);
+  -webkit-backdrop-filter: blur(0) contrast(100%) brightness(100%) saturate(100%);
 }
 
-/* Questions */
+/* Questions / UI */
 .questions{display:flex;flex-direction:column;gap:12px;align-items:center;margin-top:18px}
 .questions .qrow{width:100%;display:flex;gap:8px;justify-content:center;align-items:center}
 .questions input{width:72%;min-width:320px;max-width:900px;padding:10px 12px;border-radius:8px;border:1px solid rgba(0,255,136,0.22);background:rgba(0,0,0,.5);color:#dfffe6}
 .questions button{padding:10px 14px;border-radius:8px;border:none;background:#00ff88;color:#001;cursor:pointer}
 
-/* Flash vert */
+/* Halo/flash vert */
 .flash{position:absolute;inset:0;
   background: radial-gradient(circle at center, rgba(0,255,136,0.30), rgba(0,255,136,0.10) 40%, rgba(0,255,136,0) 70%);
   box-shadow: 0 0 140px rgba(0,255,136,0.34) inset, 0 0 320px rgba(0,255,136,0.24);
   pointer-events:none; opacity:0; transition:opacity .28s ease}
 .flash.on{opacity:1}
 
-/* Lien Spotify en bas */
+/* Lien Spotify discret en bas (optionnel) */
 .footer-audio{margin:22px 0 8px; text-align:center}
 .footer-audio a{
   display:inline-block; padding:10px 14px; border-radius:8px;
@@ -56,8 +60,6 @@
   background:rgba(0,0,0,.45);
 }
 .footer-audio a:hover{filter:brightness(115%)}
-
-.center{text-align:center}
 </style>
 </head>
 <body>
@@ -68,7 +70,7 @@
 
     <div class="poster" id="posterWrap">
       <img id="poster" src="../../assets/img/poster-final.jpg" alt="poster">
-      <!-- Masques (x,y,w,h %) — positions inchangées -->
+      <!-- Masques (x,y,w,h %) — mêmes positions -->
       <div class="mask" id="m1" data-rect="66,38,34,9"></div>
       <div class="mask" id="m2" data-rect="13,52,30,11.5"></div>
       <div class="mask" id="m3" data-rect="52,63,34,11"></div>
@@ -94,7 +96,7 @@
 </div>
 
 <script>
-// Position des masques en % du poster
+// Position en % du poster
 function positionMasks(){
   const img = document.getElementById('poster');
   const rect = img.getBoundingClientRect();
@@ -108,18 +110,18 @@ function positionMasks(){
     });
   });
 }
-window.addEventListener('load', positionMasks);
-window.addEventListener('resize', positionMasks);
+addEventListener('load', positionMasks);
+addEventListener('resize', positionMasks);
 
-// Effets
+// Effets reveal
 function playSound(){ const a=new Audio('../../assets/sfx/glitch.wav'); a.volume=0.85; a.play().catch(()=>{}); }
 function flashOnce(){ const f=document.getElementById('flash'); f.classList.add('on'); setTimeout(()=>f.classList.remove('on'), 220); }
 
-// Déverrouillage
+// Déverrouillage (mêmes réponses)
 function unlock(id, inputId, answers){
-  const val=document.getElementById(inputId).value.trim().toUpperCase();
+  const v=document.getElementById(inputId).value.trim().toUpperCase();
   const m=document.getElementById(id);
-  if(answers.includes(val) && !m.classList.contains('revealed')){
+  if(answers.includes(v) && !m.classList.contains('revealed')){
     m.classList.add('revealed'); playSound(); flashOnce();
   }
 }
@@ -129,13 +131,13 @@ b3.onclick=()=>unlock('m3','q3',['FIRE']);
 b4.onclick=()=>unlock('m4','q4',['2']);
 b5.onclick=()=>unlock('m5','q5',['UPTEMPO']);
 
-// Debug : ?debug=1
+// Debug des zones: ?debug=1
 if(new URL(location.href).searchParams.get('debug')==='1'){
   document.querySelectorAll('.mask').forEach(m=>m.style.outline='2px dashed rgba(0,255,136,.6)');
 }
 </script>
 
-<!-- Matrix rain background -->
+<!-- Matrix (fond seulement) -->
 <script src="../../assets/js/matrix.js?v=bgfix9" defer></script>
 </body>
 </html>
