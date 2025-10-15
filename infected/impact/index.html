@@ -2,31 +2,31 @@
 <html lang="en">
 <head>
 <meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
-<title>THE FIRST IMPACT OF RAW//CODE — Gate 4 (BLACKOUT FINAL • Test lien Spotify)</title>
+<title>THE FIRST IMPACT OF RAW//CODE — Gate 4 (BLACKOUT ABSOLU)</title>
 <link rel="stylesheet" href="../../assets/css/style.css?v=bgfix9">
 <style>
-/* Gate 4 — BLACKOUT FINAL: masques uniquement sur artistes, ultra-flou + sombre */
+/* Gate 4 — BLACKOUT ABSOLU: aucun détail lisible avant reveal */
 .poster{position:relative;width:92%;max-width:900px;margin:20px auto}
 .poster img{width:100%;display:block;border:1px solid rgba(255,255,255,.06);border-radius:6px}
 
-/* Masques ULTRA: 180px blur, noir 0.95, brightness 35% */
+/* Masques ABSOLU: blur 260px, noir .97, brightness 25%, contrast 250% */
 .poster .mask{
   position:absolute; z-index:3;
-  background: rgba(0,0,0,.95);
-  backdrop-filter: blur(180px) saturate(125%) contrast(220%) brightness(35%);
-  -webkit-backdrop-filter: blur(180px) saturate(125%) contrast(220%) brightness(35%);
-  transition: opacity .8s ease, backdrop-filter .8s ease, -webkit-backdrop-filter .8s ease;
-  border-radius: 16px;
+  background: rgba(0,0,0,.97);
+  backdrop-filter: blur(260px) saturate(120%) contrast(250%) brightness(25%);
+  -webkit-backdrop-filter: blur(260px) saturate(120%) contrast(250%) brightness(25%);
+  transition: opacity .9s ease, backdrop-filter .9s ease, -webkit-backdrop-filter .9s ease;
+  border-radius: 18px;
   box-shadow:
-    0 20px 140px rgba(0,0,0,1),
-    0 0 300px rgba(0,0,0,.98) inset,
-    0 0 160px rgba(0,0,0,.98);
+    0 26px 180px rgba(0,0,0,1),
+    0 0 400px rgba(0,0,0,1) inset,
+    0 0 220px rgba(0,0,0,.99);
   opacity: 1; display:block;
 }
 .poster .mask::after{
   content:""; position:absolute; inset:0; border-radius:inherit; pointer-events:none;
   background: radial-gradient(ellipse at center,
-               rgba(0,0,0,.78), rgba(0,0,0,.92) 54%, rgba(0,0,0,1) 100%);
+               rgba(0,0,0,.85), rgba(0,0,0,.95) 54%, rgba(0,0,0,1) 100%);
 }
 .poster .mask.revealed{
   opacity:0;
@@ -42,8 +42,8 @@
 
 /* Flash vert */
 .flash{position:absolute;inset:0;
-  background: radial-gradient(circle at center, rgba(0,255,136,0.28), rgba(0,255,136,0.08) 40%, rgba(0,255,136,0) 70%);
-  box-shadow: 0 0 120px rgba(0,255,136,0.32) inset, 0 0 260px rgba(0,255,136,0.22);
+  background: radial-gradient(circle at center, rgba(0,255,136,0.30), rgba(0,255,136,0.10) 40%, rgba(0,255,136,0) 70%);
+  box-shadow: 0 0 140px rgba(0,255,136,0.34) inset, 0 0 320px rgba(0,255,136,0.24);
   pointer-events:none; opacity:0; transition:opacity .28s ease}
 .flash.on{opacity:1}
 
@@ -112,8 +112,8 @@ window.addEventListener('load', positionMasks);
 window.addEventListener('resize', positionMasks);
 
 // Effets
-function playSound(){ const a=new Audio('../../assets/sfx/glitch.wav'); a.volume=0.8; a.play().catch(()=>{}); }
-function flashOnce(){ const f=document.getElementById('flash'); f.classList.add('on'); setTimeout(()=>f.classList.remove('on'), 200); }
+function playSound(){ const a=new Audio('../../assets/sfx/glitch.wav'); a.volume=0.85; a.play().catch(()=>{}); }
+function flashOnce(){ const f=document.getElementById('flash'); f.classList.add('on'); setTimeout(()=>f.classList.remove('on'), 220); }
 
 // Déverrouillage
 function unlock(id, inputId, answers){
