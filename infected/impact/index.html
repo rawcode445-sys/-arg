@@ -1,141 +1,185 @@
 <!doctype html>
-<html lang="en">
+<html lang="fr">
 <head>
-<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
-<title>THE FIRST IMPACT OF RAW//CODE — Gate 4 (BLACKOUT TERMINAL)</title>
-<link rel="stylesheet" href="../../assets/css/style.css?v=bgfix9">
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>THE FIRST IMPACT OF RAW//CODE — Gate 4 (Blackout Absolu Overlays)</title>
+<link rel="stylesheet" href="../../assets/css/style.css?v=force1">
 <style>
-/* Gate 4 — BLACKOUT TERMINAL */
-.poster{position:relative;width:92%;max-width:900px;margin:20px auto}
-.poster img{width:100%;display:block;border:1px solid rgba(255,255,255,.06);border-radius:6px}
+  /* Layout minimal */
+  body{background:#000;color:#dfffe6;font-family:Inter,system-ui,Arial;margin:0}
+  .wrapper{padding:18px}
+  .title{color:#00ff88;text-transform:uppercase;letter-spacing:1px}
+  .poster{position:relative;width:92%;max-width:980px;margin:18px auto}
+  .poster img{width:100%;display:block;border-radius:6px}
 
-/* Masques: flou très fort + COUCHE NOIRE OPAQUE au-dessus (aucune fuite) */
-.poster .mask{
-  position:absolute; z-index:3;
-  backdrop-filter: blur(400px) contrast(300%) brightness(15%) saturate(120%);
-  -webkit-backdrop-filter: blur(400px) contrast(300%) brightness(15%) saturate(120%);
-  border-radius:16px;
-  opacity:1;
-  transition: opacity .9s ease, backdrop-filter .9s ease, -webkit-backdrop-filter .9s ease;
-}
-.poster .mask::before{
-  content:"";
-  position:absolute; inset:0; border-radius:inherit; pointer-events:none;
-  background: rgba(0,0,0,0.99);
-  box-shadow:
-    0 0 280px rgba(0,0,0,1) inset,
-    0 0 200px rgba(0,0,0,0.98),
-    0 24px 180px rgba(0,0,0,1);
-}
-.poster .mask::after{
-  content:""; position:absolute; inset:0; border-radius:inherit; pointer-events:none;
-  background: radial-gradient(ellipse at center,
-    rgba(0,0,0,.85), rgba(0,0,0,.95) 55%, rgba(0,0,0,1) 100%);
-}
-.poster .mask.revealed{
-  opacity:0;
-  backdrop-filter: blur(0) contrast(100%) brightness(100%) saturate(100%);
-  -webkit-backdrop-filter: blur(0) contrast(100%) brightness(100%) saturate(100%);
-}
+  /* Overlay (OPAQUE) */
+  .overlay{
+    position:absolute;
+    background: rgba(0,0,0,0.99); /* quasi-black : garanti */
+    z-index:9999;                /* au dessus de tout */
+    border-radius:8px;
+    transition: opacity .8s ease, transform .5s ease;
+    opacity:1;
+    pointer-events:none;         /* laisse la page interactive */
+    box-shadow: 0 18px 120px rgba(0,0,0,1) inset;
+  }
+  .overlay.revealed{
+    opacity:0; transform:scale(1.01);
+    pointer-events:none;
+  }
 
-/* Questions / UI */
-.questions{display:flex;flex-direction:column;gap:12px;align-items:center;margin-top:18px}
-.questions .qrow{width:100%;display:flex;gap:8px;justify-content:center;align-items:center}
-.questions input{width:72%;min-width:320px;max-width:900px;padding:10px 12px;border-radius:8px;border:1px solid rgba(0,255,136,0.22);background:rgba(0,0,0,.5);color:#dfffe6}
-.questions button{padding:10px 14px;border-radius:8px;border:none;background:#00ff88;color:#001;cursor:pointer}
+  /* Input UI */
+  .questions{display:flex;flex-direction:column;gap:12px;align-items:center;margin-top:18px}
+  .qrow{width:100%;display:flex;gap:8px;justify-content:center;align-items:center}
+  input{width:72%;min-width:320px;padding:10px 12px;border-radius:8px;border:1px solid rgba(0,255,136,.18);background:rgba(0,0,0,.5);color:#dfffe6}
+  button{padding:10px 14px;border-radius:8px;border:none;background:#00ff88;color:#001;cursor:pointer}
 
-/* Halo/flash vert */
-.flash{position:absolute;inset:0;
-  background: radial-gradient(circle at center, rgba(0,255,136,0.30), rgba(0,255,136,0.10) 40%, rgba(0,255,136,0) 70%);
-  box-shadow: 0 0 140px rgba(0,255,136,0.34) inset, 0 0 320px rgba(0,255,136,0.24);
-  pointer-events:none; opacity:0; transition:opacity .28s ease}
-.flash.on{opacity:1}
-
-/* Lien Spotify discret en bas (optionnel) */
-.footer-audio{margin:22px 0 8px; text-align:center}
-.footer-audio a{
-  display:inline-block; padding:10px 14px; border-radius:8px;
-  border:1px solid rgba(0,255,136,.35);
-  color:#dfffe6; text-decoration:none; font-weight:600;
-  background:rgba(0,0,0,.45);
-}
-.footer-audio a:hover{filter:brightness(115%)}
+  /* Green flash */
+  .flash{position:absolute;inset:0;pointer-events:none;opacity:0;transition:opacity .28s ease;
+    background: radial-gradient(circle at center, rgba(0,255,136,0.22), rgba(0,255,136,0.04) 35%, rgba(0,255,136,0) 60%);
+    z-index:10000}
+  .flash.on{opacity:1}
+  .footer-audio{text-align:center;margin:18px 0}
+  .footer-audio a{display:inline-block;padding:8px 12px;border-radius:8px;border:1px solid rgba(0,255,136,.35);color:#dfffe6;background:rgba(0,0,0,.45);text-decoration:none}
 </style>
 </head>
 <body>
 <div class="wrapper">
-  <div class="term">
-    <h2 class="title">THE FIRST IMPACT OF RAW//CODE</h2>
-    <p class="center">27 NOVEMBRE 2025 — 20h</p>
+  <h1 class="title">THE FIRST IMPACT OF RAW//CODE</h1>
+  <p>27 NOVEMBRE 2025 — 20h — Courfaivre (coordonnées visibles après SUPREMACY)</p>
 
-    <div class="poster" id="posterWrap">
-      <img id="poster" src="../../assets/img/poster-final.jpg" alt="poster">
-      <!-- Masques (x,y,w,h %) — mêmes positions -->
-      <div class="mask" id="m1" data-rect="66,38,34,9"></div>
-      <div class="mask" id="m2" data-rect="13,52,30,11.5"></div>
-      <div class="mask" id="m3" data-rect="52,63,34,11"></div>
-      <div class="mask" id="m4" data-rect="9,72,44,11.5"></div>
-      <div class="mask" id="m5" data-rect="53,78,36,11"></div>
-      <div class="flash" id="flash"></div>
-    </div>
+  <div class="poster" id="posterWrap">
+    <img id="poster" src="../../assets/img/poster-final.jpg" alt="poster">
+    <!-- (les div.mask originaux ne sont plus nécessaires) -->
+    <!-- On conserve des éléments mask pour data, mais on va générer des overlays via JS -->
+    <div class="mask" id="m1" data-rect="66,38,34,9" data-key="HARDSTYLE"></div>
+    <div class="mask" id="m2" data-rect="13,52,30,11.5" data-key="KICKS"></div>
+    <div class="mask" id="m3" data-rect="52,63,34,11" data-key="FIRE"></div>
+    <div class="mask" id="m4" data-rect="9,72,44,11.5" data-key="2"></div>
+    <div class="mask" id="m5" data-rect="53,78,36,11" data-key="UPTEMPO"></div>
+    <div class="flash" id="flash"></div>
+  </div>
 
-    <div class="questions">
-      <div class="qrow"><input id="q1" placeholder="Q1: RAW is a subgenre of ____ ?"><button id="b1">UNLOCK</button></div>
-      <div class="qrow"><input id="q2" placeholder="Q2: Complete: RAW = distorted ____"><button id="b2">UNLOCK</button></div>
-      <div class="qrow"><input id="q3" placeholder="Q3: BUILT ON BASS. FORGED IN ____."><button id="b3">UNLOCK</button></div>
-      <div class="qrow"><input id="q4" placeholder="Q4: How many slashes in RAW//CODE ?"><button id="b4">UNLOCK</button></div>
-      <div class="qrow"><input id="q5" placeholder="Q5: Ending style after RAW = ____"><button id="b5">UNLOCK</button></div>
-    </div>
+  <div class="questions">
+    <div class="qrow"><input id="q1" placeholder="Q1: RAW is a subgenre of ____ ?"><button id="b1">UNLOCK</button></div>
+    <div class="qrow"><input id="q2" placeholder="Q2: Complete: RAW = distorted ____"><button id="b2">UNLOCK</button></div>
+    <div class="qrow"><input id="q3" placeholder="Q3: BUILT ON BASS. FORGED IN ____."><button id="b3">UNLOCK</button></div>
+    <div class="qrow"><input id="q4" placeholder="Q4: How many slashes in RAW//CODE ?"><button id="b4">UNLOCK</button></div>
+    <div class="qrow"><input id="q5" placeholder="Q5: Ending style after RAW = ____"><button id="b5">UNLOCK</button></div>
+  </div>
 
-    <div class="footer-audio">
-      <a href="https://open.spotify.com/intl-fr/track/359u0bxaE927xVFHOfRip9?si=a60ad6904d2a4352" target="_blank" rel="noopener">
-        ▶ PLAY RAW — Spotify
-      </a>
-    </div>
+  <div class="footer-audio">
+    <a href="https://open.spotify.com/track/359u0bxaE927xVFHOfRip9?si=a60ad6904d2a4352" target="_blank" rel="noopener">▶ PLAY RAW — Spotify</a>
   </div>
 </div>
 
 <script>
-// Position en % du poster
-function positionMasks(){
-  const img = document.getElementById('poster');
-  const rect = img.getBoundingClientRect();
-  document.querySelectorAll('.mask').forEach(el=>{
-    const [x,y,w,h] = el.dataset.rect.split(',').map(parseFloat);
-    Object.assign(el.style, {
-      left: (x/100)*rect.width + 'px',
-      top: (y/100)*rect.height + 'px',
-      width: (w/100)*rect.width + 'px',
-      height: (h/100)*rect.height + 'px'
-    });
+/*
+  Script robuste :
+  - crée de vrais overlays opaques (pas de backdrop-filter)
+  - positionne en % par rapport à l'image
+  - gère le reveal sur bonnes réponses (data-key sur chaque mask)
+  - debug via ?debug=1 (outline)
+*/
+
+// helper : parse rect string "x,y,w,h" -> numbers
+function parseRect(s){
+  return s.split(',').map(x=>parseFloat(x.trim()));
+}
+
+// create overlays from .mask elements
+function createOverlays(){
+  const poster = document.getElementById('poster');
+  const rect = poster.getBoundingClientRect();
+  const parent = document.getElementById('posterWrap');
+
+  // remove any old overlays
+  parent.querySelectorAll('.overlay').forEach(o => o.remove());
+
+  // iterate masks (data-rect)
+  parent.querySelectorAll('.mask').forEach(mask => {
+    const d = mask.dataset.rect;
+    if(!d) return;
+    const [x,y,w,h] = parseRect(d);
+    const left = (x/100)*rect.width;
+    const top  = (y/100)*rect.height;
+    const width = (w/100)*rect.width;
+    const height = (h/100)*rect.height;
+
+    const o = document.createElement('div');
+    o.className = 'overlay';
+    o.id = 'ov_' + mask.id;
+    o.dataset.key = (mask.dataset.key || '').toUpperCase();
+    o.style.left = left + 'px';
+    o.style.top  = top  + 'px';
+    o.style.width = width + 'px';
+    o.style.height = height + 'px';
+    // attach to parent (above image)
+    parent.appendChild(o);
   });
 }
-addEventListener('load', positionMasks);
-addEventListener('resize', positionMasks);
 
-// Effets reveal
-function playSound(){ const a=new Audio('../../assets/sfx/glitch.wav'); a.volume=0.85; a.play().catch(()=>{}); }
-function flashOnce(){ const f=document.getElementById('flash'); f.classList.add('on'); setTimeout(()=>f.classList.remove('on'), 220); }
+// reposition overlays on resize/load
+function positionAndCreate(){
+  const poster = document.getElementById('poster');
+  if(!poster.complete){
+    // ensure image is loaded first
+    poster.addEventListener('load', ()=>{ createOverlays(); }, {once:true});
+    return;
+  }
+  createOverlays();
+}
 
-// Déverrouillage (mêmes réponses)
-function unlock(id, inputId, answers){
-  const v=document.getElementById(inputId).value.trim().toUpperCase();
-  const m=document.getElementById(id);
-  if(answers.includes(v) && !m.classList.contains('revealed')){
-    m.classList.add('revealed'); playSound(); flashOnce();
+// reveal helper
+function revealByKey(key){
+  key = key.trim().toUpperCase();
+  document.querySelectorAll('.overlay').forEach(o=>{
+    if(o.dataset.key === key && !o.classList.contains('revealed')){
+      o.classList.add('revealed');
+      // sound + flash
+      try{ new Audio('../../assets/sfx/glitch.wav').play().catch(()=>{}); }catch(e){}
+      const f = document.getElementById('flash'); f.classList.add('on');
+      setTimeout(()=>f.classList.remove('on'), 380);
+    }
+  });
+}
+
+// wire up buttons
+function wireButtons(){
+  document.getElementById('b1').onclick = ()=>{ revealByKey( document.getElementById('q1').value ); };
+  document.getElementById('b2').onclick = ()=>{ revealByKey( document.getElementById('q2').value ); };
+  document.getElementById('b3').onclick = ()=>{ revealByKey( document.getElementById('q3').value ); };
+  document.getElementById('b4').onclick = ()=>{ revealByKey( document.getElementById('q4').value ); };
+  document.getElementById('b5').onclick = ()=>{ revealByKey( document.getElementById('q5').value ); };
+}
+
+// debug outlines via ?debug=1
+function debugOutline(){
+  if(new URL(location.href).searchParams.get('debug')==='1'){
+    document.querySelectorAll('.overlay').forEach(o=>{
+      o.style.outline = '2px dashed rgba(255,0,0,.8)';
+      o.style.background = 'rgba(0,0,0,0.98)';
+    });
   }
 }
-b1.onclick=()=>unlock('m1','q1',['HARDSTYLE']);
-b2.onclick=()=>unlock('m2','q2',['KICKS']);
-b3.onclick=()=>unlock('m3','q3',['FIRE']);
-b4.onclick=()=>unlock('m4','q4',['2']);
-b5.onclick=()=>unlock('m5','q5',['UPTEMPO']);
 
-// Debug des zones: ?debug=1
-if(new URL(location.href).searchParams.get('debug')==='1'){
-  document.querySelectorAll('.mask').forEach(m=>m.style.outline='2px dashed rgba(0,255,136,.6)');
-}
+// init
+window.addEventListener('load', ()=>{
+  positionAndCreate();
+  wireButtons();
+  debugOutline();
+});
+window.addEventListener('resize', ()=>{
+  // recreate overlays on resize so % mapping stays accurate
+  positionAndCreate();
+});
 </script>
+
+<!-- Matrix rain background (keeps site look) -->
+<script src="../../assets/js/matrix.js?v=bgfix9" defer></script>
+</body>
+</html>
 
 <!-- Matrix (fond seulement) -->
 <script src="../../assets/js/matrix.js?v=bgfix9" defer></script>
